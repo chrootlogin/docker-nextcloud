@@ -47,7 +47,9 @@ COPY etc/supervisord.conf /etc/supervisord.conf
 COPY etc/php-fpm.conf /etc/php5/php-fpm.conf
 COPY etc/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY etc/nginx/fastcgi_params /etc/nginx/fastcgi_params
-RUN chmod +x /bin/run.sh
+COPY etc/php/apcu.ini /etc/php5/fpm/conf.d/apcu.ini
+COPY etc/cron /etc/periodic/15min/nextcloud
+RUN chmod +x /bin/run.sh /etc/periodic/15min/nextcloud
 
 VOLUME ["/data"]
 
