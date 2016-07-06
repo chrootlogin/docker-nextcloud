@@ -1,2 +1,2 @@
 #!/bin/sh
-su - nextcloud -c "php -f /opt/nextcloud/cron.php" > /dev/null 2>&1
+su - nobody -c "php -f /opt/nextcloud/cron.php" > /dev/null 2>&1
