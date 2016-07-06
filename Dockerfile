@@ -36,6 +36,7 @@ RUN apk add --update \
   php5-xmlreader \
   php5-zip \
   php5-zlib \
+  rsync \
   sudo \
   supervisor \
   tar \

@@ -19,20 +19,25 @@ if [ ! -f /data/config/config.sample.php ]; then
   cp /opt/nextcloud/config/config.sample.php /data/config/
 fi
 
-if [ ! -f /data/config/config.php ]; then
-  cat > /data/config/config.php << EOF
-<?php
-\$CONFIG = array();
-EOF
-fi
-
 if [ ! -d /data/data ]; then
   mkdir /data/data
 fi
 
-rm -rf /opt/nextcloud/data /opt/nextcloud/config
+if [ ! -d /data/apps ]; then
+  mkdir /data/apps
+fi
+
+#for DIR in $(find /opt/nextcloud/apps ! -path /opt/nextcloud/apps -type d -maxdepth 1); do
+#  DIR=${DIR##*/}
+
+#  rsync -r --delete "/opt/nextcloud/apps/$DIR" /data/apps/
+#done
+rsync -r --delete /opt/nextcloud/apps/* /data/apps/
+
+rm -rf /opt/nextcloud/data /opt/nextcloud/config /opt/nextcloud/apps
 ln -s /data/data /opt/nextcloud/
 ln -s /data/config /opt/nextcloud/
+ln -s /data/apps /opt/nextcloud/
 
 chown -R nobody:nobody /data /opt/nextcloud/config
 
