@@ -1,7 +1,7 @@
 FROM alpine:latest
 MAINTAINER Simon Erhardt <hello@rootlogin.ch>
 
-ENV NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A" \
+ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A" \
   NEXTCLOUD_VERSION=9.0.52
 
 RUN apk add --update \
@@ -23,6 +23,7 @@ RUN apk add --update \
   php5-iconv \
   php5-intl \
   php5-json \
+  php5-ldap \
   php5-mcrypt \
   php5-openssl \
   php5-pcntl \
