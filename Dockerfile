@@ -25,6 +25,7 @@ RUN apk add --update \
   php5-json \
   php5-mcrypt \
   php5-openssl \
+  php5-pcntl \
   php5-phar \
   php5-posix \
   php5-pdo_mysql \
