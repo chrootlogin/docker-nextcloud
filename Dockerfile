@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.4
 MAINTAINER Simon Erhardt <hello@rootlogin.ch>
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -45,14 +45,15 @@ RUN apk add --update \
 
 #RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 #  && ln -sf /dev/stderr /var/log/nginx/error.log
-COPY bin/run.sh /bin/run.sh
+COPY bin/run.sh /usr/local/bin/run.sh
+COPY bin/occ /usr/local/bin/occ
 COPY etc/supervisord.conf /etc/supervisord.conf
 COPY etc/php-fpm.conf /etc/php5/php-fpm.conf
 COPY etc/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY etc/nginx/fastcgi_params /etc/nginx/fastcgi_params
 COPY etc/php/apcu.ini /etc/php5/fpm/conf.d/apcu.ini
 COPY etc/cron /etc/periodic/15min/nextcloud
-RUN chmod +x /bin/run.sh /etc/periodic/15min/nextcloud
+RUN chmod +x /usr/local/bin/run.sh /usr/local/bin/occ /etc/periodic/15min/nextcloud
 
 VOLUME ["/data"]
 
@@ -76,4 +77,4 @@ RUN NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" \
  && rm -rf /tmp/* /root/.gnupg
 
 EXPOSE 80
-ENTRYPOINT ["/bin/run.sh"]
+ENTRYPOINT ["/usr/local/bin/run.sh"]

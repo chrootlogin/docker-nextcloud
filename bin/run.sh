@@ -9,7 +9,7 @@ term_handler() {
   exit 143; # 128 + 15 -- SIGTERM
 }
 
-echo "Starting environment..."
+echo "Starting environment... (This will take some time...)"
 
 if [ ! -d /data/config ]; then
   mkdir /data/config
@@ -40,9 +40,6 @@ ln -s /data/config /opt/nextcloud/
 ln -s /data/apps /opt/nextcloud/
 
 chown -R nobody:nobody /data /opt/nextcloud/config
-
-touch /var/log/php-error.log
-chown nobody:nobody /var/log/php-error.log
 
 echo "Starting supervisord..."
 
