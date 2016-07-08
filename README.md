@@ -95,7 +95,7 @@ You can easily migrate an existing OwnCloud to this Nextcloud docker image.
 6. Wait until everything is running.
 7. Start the Nextcloud migration command: `docker exec nextcloud occ upgrade`
 8. Disable the maintenance mode of Nextcloud: `docker exec nextcloud occ maintenance:mode --off`
-9. **Profit!** 
+9. **Profit!**
 
 ### Run container with systemd
 
@@ -162,7 +162,7 @@ server {
 
 		access_log  /var/log/nginx/docker-nextcloud_access.log;
         error_log   /var/log/nginx/docker-nextcloud_error.log;
-	
+
 		location / {
                 proxy_buffers 16 4k;
                 proxy_buffer_size 2k;
@@ -175,7 +175,7 @@ server {
                 proxy_set_header   X-Real-IP         $remote_addr;
                 proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
                 proxy_set_header   X-Frame-Options   SAMEORIGIN;
-                
+
                 client_max_body_size 10G;
 
                 proxy_pass http://127.0.0.1:8000;
@@ -188,6 +188,10 @@ server {
 **Why does the start take so long?**
 
 When you run the container it will sync the Nextcloud bundled apps with your persistent data folder. If Nextcloud was updated or runs the first time it will have to sync much data.
+
+**Why you don't use PHP 7?**
+
+At the moment, there is no stable version of PHP 7 in Alpine Linux. When there will be stable packages I will upgrade.
 
 ## Contribution
 
