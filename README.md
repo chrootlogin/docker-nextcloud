@@ -7,13 +7,13 @@ Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fo
 ## Features
 
 * Uses latest stable version of **Alpine Linux**, bundled with **PHP 5** and **NGinx**.
-* GPG check during build process.
+* GPG check during building process.
 * APCu already configured.
 * LDAP support.
-* Cron running all 15 mins (No need for web or AJAX cron).
+* Cron runs all 15 mins (No need for web or AJAX cron).
 * Persistence for data, configuration and apps.
 * Nextcloud included apps that are persistent will be automatically updated during start.
-* Working with MySQL/MariaDB (server not included).
+* Works with MySQL/MariaDB (server not included).
 * Supports uploads up to 10GB.
 
 ## Container environment
@@ -49,25 +49,25 @@ Everything is bundled in the newest stable version.
 
 ### Standalone
 
-You can run Nextcloud without a separate database, but it's not recommended for production setups as it uses SQLite. Another solution is to use an external database provided elsewhere, you can enter the credentials in the installer.
+You can run Nextcloud without a separate database, but I don't recommend it for production setups as it uses SQLite. Another solution is to use an external database provided elsewhere, you can enter the credentials in the installer.
 
 1. Pull the image: `docker pull rootlogin/nextcloud`
 2. Run it: `docker run -d --name nextcloud -p 80:80 -v my_local_data_folder:/data rootlogin/nextcloud` (Replace *my_local_data_folder* with the path where do you want to store the persistent data)
 3. Open [localhost](http://localhost) and profit!
 
-If it's the first you run this, you can use the Nextcloud setup wizard to install everything. Afterwards it will run directly.
+The first time you run the application, you can use the Nextcloud setup wizard to install everything. Afterwards it will run directly.
 
 ### With a database container
 
-For standard setups I recommend the use of MariaDB, because it's more reliable than SQLite. As example, you can use the offical docker image of MariaDB for doing that. For more information refer to the according docker image.
+For standard setups I recommend the use of MariaDB, because it is more reliable than SQLite. For example, you can use the offical docker image of MariaDB. For more information refer to the according docker image.
 
 ```
 # docker pull rootlogin/nextcloud && docker pull mariadb:10
 # docker run -d --name nextcloud_db -v my_db_persistence_folder:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=supersecretpassword -e MYSQL_DATABASE=nextcloud -e MYSQL_USER=nextcloud -e MYSQL_PASSWORD=supersecretpassword mariadb:10
-# docker run -d --name nextcloud --link nextcloud_db:nextcloud_db -v my_local_data_folder:/data rootlogin/nextcloud
+# docker run -d --name nextcloud --link nextcloud_db:nextcloud_db -p 80:80 -v my_local_data_folder:/data rootlogin/nextcloud
 ```
 
-*The auto-connection of the database to nextcloud is not implemented yet. So you need to do that manually at the moment.*
+*The auto-connection of the database to nextcloud is not implemented yet. This is why you need to do that manually.*
 
 ## Configuration
 
@@ -77,7 +77,7 @@ You can configure Nextcloud via the occ command:
 # docker exec -ti nextcloud occ [...YOUR COMMANDS...]
 ```
 
-This automatically runs as the user of the webserver.
+The command uses the same user as the webserver.
 
 ## Other
 
@@ -85,11 +85,11 @@ This automatically runs as the user of the webserver.
 
 You can easily migrate an existing OwnCloud to this Nextcloud docker image.
 
-**But before starting, always make a backup of your old OwnCloud instance. I told you so!**
+**Before starting, always make a backup of your old OwnCloud instance. I told you so!**
 
 1. Enable the maintenance mode on your old OwnCloud instance, e.g. `sudo -u www-data ./occ maintenance:mode --on`
 2. Create a new folder e.g. /var/my_nextcloud_data
-3. In this folder create a new subfolder called "config" and copy the config.php from your existing instance in there.
+3. Create a new subfolder called "config" and copy the config.php from your existing instance in there.
 4. Copy your existing "data" folder to */var/my_nextcloud_data*/data
 5. Start the docker container: `docker run -d --name nextcloud -p 80:80 -v /var/my_nextcloud_data:/data rootlogin/nextcloud`
 6. Wait until everything is running.
@@ -99,7 +99,7 @@ You can easily migrate an existing OwnCloud to this Nextcloud docker image.
 
 ### Run container with systemd
 
-I usually run my containers on behalf of systemd. For this I use the following config:
+I usually run my containers on behalf of systemd, with the following config:
 
 ```
 [Unit]
@@ -118,9 +118,9 @@ WantedBy=default.target
 
 ### NGinx frontend proxy
 
-This container does not support SSL or anything and is therefor not made for running directly in the world wide web. For that you normaly use a frontend proxy like NGinx.
+This container does not support SSL or similar and is therefore not made for running directly in the world wide web. You better use a frontend proxy like another NGinx.
 
-Here is some sample config (This config will not work as-is. But you can adapt it.):
+Here are some sample configs (The config need to be adapted):
 
 ```
 server {
@@ -189,9 +189,9 @@ server {
 
 When you run the container it will sync the Nextcloud bundled apps with your persistent data folder. If Nextcloud was updated or runs the first time it will have to sync much data.
 
-**Why you don't use PHP 7?**
+**Why don't you use PHP 7?**
 
-At the moment, there is no stable version of PHP 7 in Alpine Linux. When there will be stable packages I will upgrade.
+At present, there is no stable version of PHP 7 in Alpine Linux. I will upgrade it, when there will be stable packages.
 
 ## Contribution
 
