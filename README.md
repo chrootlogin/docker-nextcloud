@@ -193,6 +193,10 @@ When you run the container it will sync the Nextcloud bundled apps with your per
 
 At present, there is no stable version of PHP 7 in Alpine Linux. I will upgrade it, when there will be stable packages.
 
+## Overwritten config
+
+Some parameters in the Nextcloud configuration will be overwritten by the file in `etc/owncloud/docker.config.php`
+
 ## Contribution
 
 This stuff is released under GPL. I'm happy about every pull-request, that makes this tool better.

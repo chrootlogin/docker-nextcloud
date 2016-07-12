@@ -76,5 +76,7 @@ RUN NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" \
  && tar xjf ${NEXTCLOUD_TARBALL} --strip-components=1 -C /opt/nextcloud \
  && rm -rf /tmp/* /root/.gnupg
 
+COPY etc/owncloud/docker.config.php /opt/nextcloud/config/docker.config.php
+
 EXPOSE 80
 ENTRYPOINT ["/usr/local/bin/run.sh"]

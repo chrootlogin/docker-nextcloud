@@ -9,7 +9,7 @@ term_handler() {
   exit 143; # 128 + 15 -- SIGTERM
 }
 
-echo "Starting environment... (This will take some time...)"
+echo "Preparing environment... (This will take some time...)"
 
 if [ ! -d /data/config ]; then
   mkdir /data/config
@@ -17,6 +17,10 @@ fi
 
 if [ ! -f /data/config/config.sample.php ]; then
   cp /opt/nextcloud/config/config.sample.php /data/config/
+fi
+
+if [ ! -f /data/config/docker.config.php ]; then
+  cp /opt/nextcloud/config/docker.config.php /data/config/
 fi
 
 if [ ! -d /data/data ]; then
@@ -27,11 +31,10 @@ if [ ! -d /data/apps ]; then
   mkdir /data/apps
 fi
 
-#for DIR in $(find /opt/nextcloud/apps ! -path /opt/nextcloud/apps -type d -maxdepth 1); do
-#  DIR=${DIR##*/}
+if [ ! -d /data/tmp ]; then
+  mkdir /data/tmp
+fi
 
-#  rsync -r --delete "/opt/nextcloud/apps/$DIR" /data/apps/
-#done
 rsync -r --delete /opt/nextcloud/apps/* /data/apps/
 
 rm -rf /opt/nextcloud/data /opt/nextcloud/config /opt/nextcloud/apps
