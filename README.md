@@ -43,7 +43,7 @@ Everything is bundled in the newest stable version.
 - **80**: NGinx webserver running Nextcloud.
 
 ### Volumes
-- **/data** : All data, including config and apps (in subfolders).
+- **/data** : All data, including config and user downloaded apps (in subfolders).
 
 ## Usage
 
@@ -187,7 +187,7 @@ server {
 
 **Why does the start take so long?**
 
-When you run the container it will sync the Nextcloud bundled apps with your persistent data folder. If Nextcloud was updated or runs the first time it will have to sync much data.
+When you run the container it will reset the permissions on the /data folder. This means if you have much data, it takes some time.
 
 **Why don't you use PHP 7?**
 

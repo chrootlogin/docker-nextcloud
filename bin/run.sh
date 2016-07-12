@@ -9,38 +9,53 @@ term_handler() {
   exit 143; # 128 + 15 -- SIGTERM
 }
 
+# Migration stuff
+if [ -d /data/apps ]; then
+  echo "Migrate apps... (This will take some time...)"
+
+  for DIR in $(find /data/apps ! -path /data/apps -type d -maxdepth 1); do
+    DIR=${DIR##*/}
+
+    # Delete apps that are delivered with Nextcloud
+    if [ -d /opt/nextcloud/apps/$DIR ]; then
+      rm -rf /data/apps/$DIR
+    fi
+  done
+
+  if [ -d /data/userapps ]; then
+    mv /data/apps/* /data/userapps/
+    rm -rf /data/apps
+  else
+    mv /data/apps /data/userapps
+  fi
+fi
+
+# Bootstrap application
 echo "Preparing environment... (This will take some time...)"
 
 if [ ! -d /data/config ]; then
   mkdir /data/config
 fi
 
-if [ ! -f /data/config/config.sample.php ]; then
-  cp /opt/nextcloud/config/config.sample.php /data/config/
-fi
-
-if [ ! -f /data/config/docker.config.php ]; then
-  cp /opt/nextcloud/config/docker.config.php /data/config/
-fi
+cp -f /opt/nextcloud/config/config.sample.php /data/config/
+cp -f /opt/nextcloud/config/docker.config.php /data/config/
 
 if [ ! -d /data/data ]; then
   mkdir /data/data
-fi
-
-if [ ! -d /data/apps ]; then
-  mkdir /data/apps
 fi
 
 if [ ! -d /data/tmp ]; then
   mkdir /data/tmp
 fi
 
-rsync -r --delete /opt/nextcloud/apps/* /data/apps/
+if [ ! -d /data/userapps ]; then
+  mkdir /data/userapps
+fi
 
-rm -rf /opt/nextcloud/data /opt/nextcloud/config /opt/nextcloud/apps
+rm -rf /opt/nextcloud/data /opt/nextcloud/config
 ln -s /data/data /opt/nextcloud/
 ln -s /data/config /opt/nextcloud/
-ln -s /data/apps /opt/nextcloud/
+ln -s /data/userapps /opt/nextcloud/
 
 chown -R nobody:nobody /data /opt/nextcloud/config
 
