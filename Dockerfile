@@ -2,7 +2,7 @@ FROM alpine:3.4
 MAINTAINER Simon Erhardt <hello@rootlogin.ch>
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
-ARG NEXTCLOUD_VERSION=9.0.52
+ARG NEXTCLOUD_VERSION=10.0.0
 
 RUN apk add --update \
   bash \
@@ -76,7 +76,7 @@ RUN NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" \
  && tar xjf ${NEXTCLOUD_TARBALL} --strip-components=1 -C /opt/nextcloud \
  && rm -rf /tmp/* /root/.gnupg
 
-COPY etc/owncloud/docker.config.php /opt/nextcloud/config/docker.config.php
+COPY etc/nextcloud/docker.config.php /opt/nextcloud/config/docker.config.php
 
 EXPOSE 80
 ENTRYPOINT ["/usr/local/bin/run.sh"]
