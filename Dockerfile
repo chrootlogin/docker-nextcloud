@@ -2,11 +2,7 @@ FROM alpine:3.4
 MAINTAINER Simon Erhardt <hello@rootlogin.ch>
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
-<<<<<<< HEAD
 ARG NEXTCLOUD_VERSION=10.0.0
-=======
-ARG NEXTCLOUD_VERSION=9.0.53
->>>>>>> e6f461373606a0ea532389ebd96f40fa2e8f6636
 
 RUN apk add --update \
   bash \
