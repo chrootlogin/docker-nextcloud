@@ -31,6 +31,7 @@ RUN apk add --update \
   php5-posix \
   php5-pdo_mysql \
   php5-pdo_sqlite \
+  php5-pdo_pgsql \
   php5-sqlite3 \
   php5-xml \
   php5-xmlreader \
