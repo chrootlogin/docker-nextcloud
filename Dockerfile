@@ -43,8 +43,6 @@ RUN apk add --update \
   wget \
   && rm -rf /var/cache/apk/*
 
-#RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-#  && ln -sf /dev/stderr /var/log/nginx/error.log
 COPY bin/run.sh /usr/local/bin/run.sh
 COPY bin/occ /usr/local/bin/occ
 COPY etc/supervisord.conf /etc/supervisord.conf
@@ -59,7 +57,8 @@ VOLUME ["/data"]
 
 RUN mkdir -p /opt/nextcloud
 
-RUN NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" \
+RUN cd /tmp \
+ && NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" \
  && wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL} \
  && wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.sha256 \
  && wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.asc \

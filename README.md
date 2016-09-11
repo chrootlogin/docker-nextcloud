@@ -2,6 +2,8 @@
 
 ![](https://s32.postimg.org/69nev7aol/Nextcloud_logo.png)
 
+[![](https://images.microbadger.com/badges/version/rootlogin/nextcloud.svg)](http://microbadger.com/images/rootlogin/nextcloud "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/rootlogin/nextcloud.svg)](http://microbadger.com/images/rootlogin/nextcloud "Get your own image badge on microbadger.com") 
+
 Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fork of OwnCloud.
 
 ## Features
