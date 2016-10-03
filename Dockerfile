@@ -3,6 +3,8 @@ MAINTAINER Simon Erhardt <hello@rootlogin.ch>
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 ARG NEXTCLOUD_VERSION=10.0.1
+ARG UID=1501
+ARG GID=1501
 
 RUN apk add --update \
   bash \
@@ -43,6 +45,9 @@ RUN apk add --update \
   wget \
   tini \
   && rm -rf /var/cache/apk/*
+
+RUN addgroup -g ${GID} nextcloud \
+  && adduser -u ${UID} -h /opt/nextcloud -H -G nextcloud -s /sbin/nologin -D nextcloud
 
 COPY bin/run.sh /usr/local/bin/run.sh
 COPY bin/occ /usr/local/bin/occ

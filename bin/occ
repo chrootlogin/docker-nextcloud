@@ -1,3 +1,3 @@
 #!/bin/bash
 cd /opt/nextcloud
-sudo -u nobody php ./occ $@
+sudo -u nextcloud php ./occ $@

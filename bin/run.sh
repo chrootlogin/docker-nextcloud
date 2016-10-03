@@ -57,7 +57,7 @@ ln -s /data/data /opt/nextcloud/
 ln -s /data/config /opt/nextcloud/
 ln -s /data/userapps /opt/nextcloud/
 
-chown -R nobody:nobody /data /opt/nextcloud/config
+chown -R nextcloud:nextcloud /data /opt/nextcloud/config
 
 echo "Starting supervisord..."
 
