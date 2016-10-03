@@ -15,7 +15,7 @@ Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fo
 * Cron runs all 15 mins (No need for web or AJAX cron).
 * Persistence for data, configuration and apps.
 * Nextcloud included apps that are persistent will be automatically updated during start.
-* Works with MySQL/MariaDB (server not included).
+* Works with MySQL/MariaDB and PostgreSQL (server not included).
 * Supports uploads up to 10GB.
 
 ## Container environment
@@ -40,6 +40,8 @@ Everything is bundled in the newest stable version.
 ### Build-time arguments
 * **NEXTCLOUD_GPG**: Fingerprint of Nextcloud signing key
 * **NEXTCLOUD_VERSION**: Nextcloud version to install
+* **UID**: User ID of the nextcloud user (default 1501)
+* **GID**: Group ID of the nextcloud user (default 1501)
 
 ### Exposed ports
 - **80**: NGinx webserver running Nextcloud.
@@ -189,7 +191,7 @@ server {
 
 **Why does the start take so long?**
 
-When you run the container it will reset the permissions on the /data folder. This means if you have much data, it takes some time.
+When you run the container it will reset the permissions on the /data folder. This means if you have much data, it takes some time. This helps to avoid permission issues.
 
 **Why don't you use PHP 7?**
 
