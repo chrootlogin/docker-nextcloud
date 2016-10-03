@@ -61,19 +61,5 @@ chown -R nobody:nobody /data /opt/nextcloud/config
 
 echo "Starting supervisord..."
 
-pid=0
-
-# setup handlers
-# on callback, kill the last background process, which is `tail -f /dev/null` and execute the specified handler
-trap 'kill ${!}; term_handler' SIGTERM
-trap 'kill ${!}; term_handler' INT
-
 # run application
-/usr/bin/supervisord -c /etc/supervisord.conf &
-pid="$!"
-
-# wait indefinetely
-while true
-do
-  tail -f /dev/null & wait ${!}
-done
+exec /usr/bin/supervisord -c /etc/supervisord.conf
