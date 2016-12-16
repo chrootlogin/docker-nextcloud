@@ -23,6 +23,7 @@ RUN apk add --update \
   php5-gd \
   php5-gmp \
   php5-iconv \
+  php5-imap \
   php5-intl \
   php5-json \
   php5-ldap \

@@ -205,6 +205,12 @@ Some parameters in the Nextcloud configuration will be overwritten by the file i
 
 You can change the numerical user id and group id via build arguments.
 
+```
+$ git clone https://github.com/chrootLogin/docker-nextcloud.git && cd docker-nextcloud
+$ docker build -t rootlogin/nextcloud --build-arg UID=1000 --build-arg GID=1000 .
+$ docker run -p 80:80 rootlogin/nextcloud
+```
+
 ## Contribution
 
 This stuff is released under GPL. I'm happy about every pull-request, that makes this tool better.
