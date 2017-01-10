@@ -29,6 +29,7 @@ RUN apk add --update \
   php5-ldap \
   php5-mcrypt \
   php5-openssl \
+  php5-opcache \
   php5-pcntl \
   php5-phar \
   php5-posix \
