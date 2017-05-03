@@ -6,6 +6,8 @@
 
 Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fork of OwnCloud.
 
+**There is currently a bug in PHP 7 which stops the RNG from working**
+
 **Now featuring PHP 7 support!**
 
 ## Features
