@@ -44,12 +44,11 @@ RUN apk add --update \
   php7-xmlreader \
   php7-zip \
   php7-zlib \
-  rsync \
   sudo \
   supervisor \
   tar \
-  wget \
   tini \
+  wget \
   && rm -rf /var/cache/apk/* \
   && addgroup -g ${GID} nextcloud \
   && adduser -u ${UID} -h /opt/nextcloud -H -G nextcloud -s /sbin/nologin -D nextcloud \
