@@ -18,6 +18,7 @@ RUN apk add --update \
   php7-curl \
   php7-dom \
   php7-exif \
+  php7-fileinfo \
   php7-fpm \
   php7-ftp \
   php7-gd \
