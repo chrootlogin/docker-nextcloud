@@ -1,4 +1,4 @@
-FROM alpine:3.5
+FROM alpine:edge
 MAINTAINER Simon Erhardt <hello@rootlogin.ch>
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -39,9 +39,11 @@ RUN apk add --update \
   php7-pdo_pgsql \
   php7-pgsql \
   php7-session \
+  php7-simplexml \
   php7-sqlite3 \
   php7-xml \
   php7-xmlreader \
+  php7-xmlwriter \
   php7-zip \
   php7-zlib \
   sudo \
