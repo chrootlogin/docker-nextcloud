@@ -5,6 +5,7 @@ $CONFIG = array(
   'supportedDatabases' => array(
     'sqlite',
     'mysql',
+    'pgsql'
   ),
   'memcache.local' => '\OC\Memcache\APCu',
   'apps_paths' => array(

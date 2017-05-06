@@ -59,7 +59,6 @@ ln -s /data/userapps /opt/nextcloud/
 
 chown -R nextcloud:nextcloud /data /opt/nextcloud/config
 
-echo "Starting supervisord..."
-
 # run application
+echo "Starting supervisord..."
 exec /usr/bin/supervisord -c /etc/supervisord.conf
