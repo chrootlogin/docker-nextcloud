@@ -35,8 +35,10 @@ Everything is bundled in the newest stable version.
 
 ### Tags
 
-* **latest**: latest stable Nextcloud version
-* **vX.X.X**: stable version tags of Nextcloud (e.g. v9.0.52)
+* **latest**: latest stable Nextcloud version (PHP 7)
+* **php5**: PHP 5 branch (EOL)
+* **vX.X.X**: stable version tags of Nextcloud (e.g. v9.0.52) (Version => 12.0.0 use PHP 7)
+* **vX.X.X-php5**: stable version tags of Nextcloud (e.g. v9.0.52) (PHP 5)
 
 ### Build-time arguments
 * **NEXTCLOUD_GPG**: Fingerprint of Nextcloud signing key
