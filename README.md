@@ -6,6 +6,15 @@
 
 Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fork of OwnCloud.
 
+---
+
+*Warning:* **This branch is end of life!**
+
+This image uses PHP 5.6 which soon gets EOL. Consider switching to PHP 7 version of this image.
+I will update this image as long it is supported by Nextcloud. But I won't add any new features.
+
+---
+
 ## Features
 
 * Uses latest stable version of **Alpine Linux**, bundled with **PHP 5** and **NGinx**.
