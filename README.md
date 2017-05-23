@@ -2,7 +2,7 @@
 
 ![](https://s32.postimg.org/69nev7aol/Nextcloud_logo.png)
 
-[![](https://images.microbadger.com/badges/version/rootlogin/nextcloud.svg)](http://microbadger.com/images/rootlogin/nextcloud "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/rootlogin/nextcloud.svg)](http://microbadger.com/images/rootlogin/nextcloud "Get your own image badge on microbadger.com")
+[![Docker Repository on Quay](https://quay.io/repository/rootlogin/nextcloud/status "Docker Repository on Quay")](https://quay.io/repository/rootlogin/nextcloud) [![](https://images.microbadger.com/badges/version/rootlogin/nextcloud.svg)](http://microbadger.com/images/rootlogin/nextcloud "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/rootlogin/nextcloud.svg)](http://microbadger.com/images/rootlogin/nextcloud "Get your own image badge on microbadger.com")
 
 Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fork of OwnCloud.
 
@@ -10,7 +10,7 @@ Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fo
 
 **Now featuring PHP 7 support!**
 
-This image was updated to PHP 7.1.5. If you encounter any issues, please open a github issue.
+This image was updated to PHP 7.1. If you encounter any issues, please open a github issue.
 
 *If you want to use the old PHP 5 version for now, you can use the branch/tag php5 or the according version tags (e.g. v12.0.0-php5). But the support will be dropped soon.*
 
@@ -27,6 +27,7 @@ This image was updated to PHP 7.1.5. If you encounter any issues, please open a 
 * Nextcloud included apps that are persistent will be automatically updated during start.
 * Works with MySQL/MariaDB and PostgreSQL (server not included).
 * Supports uploads up to 10GB.
+* This image is also available via [Quay.io](http://quay.io/rootlogin/nextcloud).
 
 ## Container environment
 
