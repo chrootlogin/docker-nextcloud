@@ -2,13 +2,23 @@
 
 ![](https://s32.postimg.org/69nev7aol/Nextcloud_logo.png)
 
-[![](https://images.microbadger.com/badges/version/rootlogin/nextcloud.svg)](http://microbadger.com/images/rootlogin/nextcloud "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/rootlogin/nextcloud.svg)](http://microbadger.com/images/rootlogin/nextcloud "Get your own image badge on microbadger.com")
+[![Docker Repository on Quay](https://quay.io/repository/rootlogin/nextcloud/status "Docker Repository on Quay")](https://quay.io/repository/rootlogin/nextcloud) [![](https://images.microbadger.com/badges/version/rootlogin/nextcloud.svg)](http://microbadger.com/images/rootlogin/nextcloud "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/rootlogin/nextcloud.svg)](http://microbadger.com/images/rootlogin/nextcloud "Get your own image badge on microbadger.com")
 
 Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fork of OwnCloud.
 
+---
+
+**Now featuring PHP 7 support!**
+
+This image was updated to PHP 7.1. If you encounter any issues, please open a github issue.
+
+*If you want to use the old PHP 5 version for now, you can use the branch/tag php5 or the according version tags (e.g. v12.0.0-php5). But the support will be dropped soon.*
+
+---
+
 ## Features
 
-* Uses latest stable version of **Alpine Linux**, bundled with **PHP 5** and **NGinx**.
+* Uses latest stable version of **Alpine Linux**, bundled with **PHP 7** and **NGinx**.
 * GPG check during building process.
 * APCu already configured.
 * LDAP support.
@@ -17,25 +27,27 @@ Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fo
 * Nextcloud included apps that are persistent will be automatically updated during start.
 * Works with MySQL/MariaDB and PostgreSQL (server not included).
 * Supports uploads up to 10GB.
+* This image is also available via [Quay.io](http://quay.io/rootlogin/nextcloud).
 
 ## Container environment
 
 ### Included software
 
-* Alpine Linux 3.4 (stable)
-* PHP 5
+* Alpine Linux
+* **PHP 7**
 * APCu
 * NGinx
 * cron
-* rsync
 * SupervisorD
 
 Everything is bundled in the newest stable version.
 
 ### Tags
 
-* **latest**: latest stable Nextcloud version
-* **vX.X.X**: stable version tags of Nextcloud (e.g. v9.0.52)
+* **latest**: latest stable Nextcloud version (PHP 7)
+* **php5**: PHP 5 branch (EOL)
+* **vX.X.X**: stable version tags of Nextcloud (e.g. v9.0.52) (Version => 12.0.0 use PHP 7)
+* **vX.X.X-php5**: stable version tags of Nextcloud (e.g. v9.0.52) (PHP 5)
 
 ### Build-time arguments
 * **NEXTCLOUD_GPG**: Fingerprint of Nextcloud signing key
@@ -133,57 +145,57 @@ server {
 
 	# ACME handling for Letsencrypt
 	location /.well-known/acme-challenge {
-    	alias /var/www/letsencrypt/;
-    	default_type "text/plain";
-   		try_files $uri =404;
+  	alias /var/www/letsencrypt/;
+  	default_type "text/plain";
+ 		try_files $uri =404;
 	}
 
 	location / {
-    	return 301 https://$host$request_uri;
+  	return 301 https://$host$request_uri;
 	}
 }
 
 server {
-        listen 443 ssl spdy;
-        server_name cloud.example.net;
+  listen 443 ssl spdy;
+  server_name cloud.example.net;
 
-		ssl_certificate /etc/letsencrypt.sh/certs/cloud.example.net/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt.sh/certs/cloud.example.net/privkey.pem;
-        ssl_trusted_certificate /etc/letsencrypt.sh/certs/cloud.example.net/chain.pem;
-		ssl_dhparam /etc/nginx/dhparam.pem;
-		ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	ssl_certificate /etc/letsencrypt.sh/certs/cloud.example.net/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt.sh/certs/cloud.example.net/privkey.pem;
+  ssl_trusted_certificate /etc/letsencrypt.sh/certs/cloud.example.net/chain.pem;
+	ssl_dhparam /etc/nginx/dhparam.pem;
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
-		ssl_session_cache shared:SSL:10m;
-		ssl_session_timeout 30m;
+	ssl_session_cache shared:SSL:10m;
+	ssl_session_timeout 30m;
 
-		ssl_prefer_server_ciphers on;
-		ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+	ssl_prefer_server_ciphers on;
+	ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
 
-		ssl_stapling on;
-		ssl_stapling_verify on;
+	ssl_stapling on;
+	ssl_stapling_verify on;
 
-		add_header Strict-Transport-Security "max-age=31536000";
+	add_header Strict-Transport-Security "max-age=31536000";
 
-		access_log  /var/log/nginx/docker-nextcloud_access.log;
-        error_log   /var/log/nginx/docker-nextcloud_error.log;
+	access_log  /var/log/nginx/docker-nextcloud_access.log;
+  error_log   /var/log/nginx/docker-nextcloud_error.log;
 
-		location / {
-                proxy_buffers 16 4k;
-                proxy_buffer_size 2k;
+	location / {
+    proxy_buffers 16 4k;
+    proxy_buffer_size 2k;
 
-                proxy_read_timeout 300;
-                proxy_connect_timeout 300;
-                proxy_redirect     off;
+    proxy_read_timeout 300;
+    proxy_connect_timeout 300;
+    proxy_redirect     off;
 
-                proxy_set_header   Host              $http_host;
-                proxy_set_header   X-Real-IP         $remote_addr;
-                proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
-                proxy_set_header   X-Frame-Options   SAMEORIGIN;
+    proxy_set_header   Host              $http_host;
+    proxy_set_header   X-Real-IP         $remote_addr;
+    proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Frame-Options   SAMEORIGIN;
 
-                client_max_body_size 10G;
+    client_max_body_size 10G;
 
-                proxy_pass http://127.0.0.1:8000;
-        }
+    proxy_pass http://127.0.0.1:8000;
+  }
 }
 ```
 
@@ -193,13 +205,9 @@ server {
 
 When you run the container it will reset the permissions on the /data folder. This means if you have much data, it takes some time. This helps to avoid permission issues.
 
-**Why don't you use PHP 7?**
-
-At present, there is no stable version of PHP 7 in Alpine Linux. I will upgrade it, when there will be stable packages.
-
 ## Overwritten config
 
-Some parameters in the Nextcloud configuration will be overwritten by the file in `etc/owncloud/docker.config.php`
+Some parameters in the Nextcloud configuration will be overwritten by the file in `root/opt/nextcloud/config/docker.config.php`
 
 ## Group/User ID
 

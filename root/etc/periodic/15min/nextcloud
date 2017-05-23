@@ -1,0 +1,2 @@
+#!/bin/sh
+sudo -u nextcloud php -f /opt/nextcloud/cron.php > /dev/stdout 2>&1
