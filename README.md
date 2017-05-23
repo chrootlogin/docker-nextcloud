@@ -6,8 +6,6 @@
 
 Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fork of OwnCloud.
 
-**WARNING**: There is currently a bug in the PHP 7.0 package of Alpine Linux which stops Nextcloud from working on some older kernels like the one shipped by Debian "Jessie". See: [https://bugs.php.net/bug.php?id=74105]. We have to wait until there is a new release of the PHP 7.0 package in Alpine Linux. A bug report has already been opened: [https://bugs.alpinelinux.org/issues/7264]
-
 **Now featuring PHP 7 support!**
 
 ## Features
@@ -26,7 +24,7 @@ Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fo
 
 ### Included software
 
-* Alpine Linux 3.5 (stable)
+* Alpine Linux
 * **PHP 7**
 * APCu
 * NGinx
