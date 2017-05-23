@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  db:
+    restart: always
+    image: mariadb:10.1
+    mem_limit: 256M
+    volumes:
+      - NEXTCLOUD_MARIADB:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=secret
+      - TZ=Europe/Zurich
+
+  nextcloud:
+    restart: always
+    image: quay.io/rootlogin/nextcloud:latest
+    mem_limit: 1G
+    volumes:
+      - /data/nextcloud:/data
+    environment:
+      - TZ=Europe/Zurich
+    ports:
+      - "127.0.0.1:80:80"
+    links:
+      - db
+    depends_on:
+      - db
