@@ -6,7 +6,15 @@
 
 Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fork of OwnCloud.
 
+---
+
 **Now featuring PHP 7 support!**
+
+This image was updated to PHP 7.1.5. If you encounter any issues, please open a github issue.
+
+*If you want to use the old PHP 5 version for now, you can use the branch/tag php5 or the according version tags (e.g. v12.0.0-php5). But the support will be dropped soon.*
+
+---
 
 ## Features
 
