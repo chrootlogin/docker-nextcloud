@@ -43,8 +43,10 @@ Everything is bundled in the newest stable version.
 
 ### Tags
 
-* **latest**: latest stable Nextcloud version
-* **vX.X.X**: stable version tags of Nextcloud (e.g. v9.0.52)
+* **latest**: latest stable Nextcloud version (PHP 7)
+* **php5**: PHP 5 branch (EOL)
+* **vX.X.X**: stable version tags of Nextcloud (e.g. v9.0.52) (Version => 12.0.0 use PHP 7)
+* **vX.X.X-php5**: stable version tags of Nextcloud (e.g. v9.0.52) (PHP 5)
 
 ### Build-time arguments
 * **NEXTCLOUD_GPG**: Fingerprint of Nextcloud signing key
@@ -204,7 +206,7 @@ When you run the container it will reset the permissions on the /data folder. Th
 
 **Why don't you use PHP 7?**
 
-At present, there is no stable version of PHP 7 in Alpine Linux. I will upgrade it, when there will be stable packages.
+Use the PHP 7 branch (latest). ;-)
 
 ## Overwritten config
 
