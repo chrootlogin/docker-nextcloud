@@ -223,3 +223,9 @@ $ docker run -p 80:80 quay.io/rootlogin/nextcloud
 ## Contribution
 
 This stuff is released under GPL. I'm happy about every pull-request, that makes this tool better.
+
+## Donate
+
+If you want to donate for this project, you can send me some coins to the following address.
+
+**Bitcoin**: 1CCzVGMgoEbd5Zn84QnqjNFRj4PZtAoTrC
