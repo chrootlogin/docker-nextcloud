@@ -12,8 +12,6 @@ Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fo
 
 This image was updated to PHP 7.1. If you encounter any issues, please open a github issue.
 
-*If you want to use the old PHP 5 version for now, you can use the branch/tag php5 or the according version tags (e.g. v12.0.0-php5). But the support will be dropped soon.*
-
 ---
 
 ## Features
@@ -46,8 +44,6 @@ Everything is bundled in the newest stable version.
 
 * **latest**: latest stable Nextcloud version (PHP 7)
 * **vX.X.X**: stable version tags of Nextcloud (e.g. v9.0.52) (Version >= 12.0.0 use PHP 7)
-* **php5**: PHP 5 branch (EOL)
-* **vX.X.X-php5**: stable version tags of Nextcloud (e.g. v9.0.52) (PHP 5)
 * **develop**: latest development branch (may unstable)
 
 ### Build-time arguments
