@@ -2,7 +2,7 @@ FROM php:7.1-fpm-alpine
 MAINTAINER Simon Erhardt <hello@rootlogin.ch>
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
-ARG NEXTCLOUD_VERSION=12.0.2
+ARG NEXTCLOUD_VERSION=12.0.3
 ARG UID=1501
 ARG GID=1501
 
@@ -30,6 +30,7 @@ RUN set -ex \
   pcre-dev \
   postgresql-dev \
   postgresql-libs \
+  samba-client \
   sudo \
   supervisor \
   tar \
