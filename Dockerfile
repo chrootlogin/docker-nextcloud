@@ -88,7 +88,13 @@ RUN set -ex \
   && tar xjf ${NEXTCLOUD_TARBALL} --strip-components=1 -C /opt/nextcloud \
 # Remove nextcloud updater for safety
   && rm -rf /opt/nextcloud/updater \
-  && rm -rf /tmp/* /root/.gnupg
+  && rm -rf /tmp/* /root/.gnupg \
+
+# Wipe excess directories
+  && rm -rf /var/www/*
+
+# Make working directory root of NextCloud.
+WORKDIR /opt/nextcloud
 
 COPY root /
 
