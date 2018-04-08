@@ -1,5 +1,6 @@
 FROM php:7.1-fpm-alpine
-MAINTAINER Simon Erhardt <hello@rootlogin.ch>
+MAINTAINER Arturo Araya <ccellist@gmail.com>
+#forked from rootlogin/nextcloud Simon Erhardt <hello@rootlogin.ch>
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 ARG NEXTCLOUD_VERSION=13.0.0
@@ -95,7 +96,7 @@ COPY root /
 
 RUN chmod +x /usr/local/bin/run.sh /usr/local/bin/occ /etc/periodic/15min/nextcloud
 
-VOLUME ["/data"]
+VOLUME ["/data","/opt/nextcloud"]
 
 EXPOSE 80
 
