@@ -1,5 +1,6 @@
 FROM php:7.1-fpm-alpine
-MAINTAINER Simon Erhardt <hello@rootlogin.ch>
+MAINTAINER Arturo Araya <ccellist@gmail.com>
+#forked from rootlogin/nextcloud Simon Erhardt <hello@rootlogin.ch>
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 ARG NEXTCLOUD_VERSION=13.0.0
@@ -14,6 +15,7 @@ RUN set -ex \
   gnupg \
   icu-dev \
   icu-libs \
+  freetype-dev \
   libjpeg-turbo \
   libjpeg-turbo-dev \
   libldap \
@@ -39,7 +41,7 @@ RUN set -ex \
 
 # PHP Extensions
 # https://docs.nextcloud.com/server/9/admin_manual/installation/source_installation.html
-  && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
+  && docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-configure ldap \
   && docker-php-ext-install gd exif intl mbstring mcrypt ldap mysqli opcache pdo_mysql pdo_pgsql pgsql zip \
   && pecl install APCu-5.1.8 \
@@ -94,7 +96,7 @@ COPY root /
 
 RUN chmod +x /usr/local/bin/run.sh /usr/local/bin/occ /etc/periodic/15min/nextcloud
 
-VOLUME ["/data"]
+VOLUME ["/data","/opt/nextcloud"]
 
 EXPOSE 80
 
