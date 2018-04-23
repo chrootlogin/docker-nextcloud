@@ -1,5 +1,15 @@
 FROM php:7.1-fpm-alpine
-MAINTAINER Simon Erhardt <hello@rootlogin.ch>
+
+ARG BUILD_DATE
+ARG VCS_REF
+
+LABEL maintainer="Simon Erhardt <hello@rootlogin.ch>" \
+  org.label-schema.name="Nextcloud" \
+  org.label-schema.description="Minimal Nextcloud docker image based on Alpine Linux." \
+  org.label-schema.build-date=$BUILD_DATE \
+  org.label-schema.vcs-ref=$VCS_REF \
+  org.label-schema.vcs-url="https://github.com/chrootLogin/docker-nextcloud" \
+  org.label-schema.schema-version="1.0"
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 ARG NEXTCLOUD_VERSION=13.0.1
