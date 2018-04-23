@@ -21,6 +21,8 @@ RUN set -ex \
   alpine-sdk \
   autoconf \
   bash \
+  freetype \
+  freetype-dev \
   gnupg \
   icu-dev \
   icu-libs \
@@ -51,7 +53,7 @@ RUN set -ex \
 
 # PHP Extensions
 # https://docs.nextcloud.com/server/9/admin_manual/installation/source_installation.html
-  && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
+  && docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-configure ldap \
   && docker-php-ext-configure zip --with-libzip=/usr \
   && docker-php-ext-install gd exif intl mbstring ldap mysqli opcache pdo_mysql pdo_pgsql pgsql zip \
@@ -65,6 +67,7 @@ RUN set -ex \
   && apk del \
     alpine-sdk \
     autoconf \
+    freetype-dev \
     icu-dev \
     libmcrypt-dev \
     libmemcached-dev \
