@@ -1,4 +1,4 @@
-FROM php:7.1-fpm-alpine
+FROM php:7.2-fpm-alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -33,6 +33,8 @@ RUN set -ex \
   libmemcached-dev \
   libpng \
   libpng-dev \
+  libzip \
+  libzip-dev \
   nginx \
   openldap-dev \
   openssl \
@@ -51,11 +53,13 @@ RUN set -ex \
 # https://docs.nextcloud.com/server/9/admin_manual/installation/source_installation.html
   && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-configure ldap \
-  && docker-php-ext-install gd exif intl mbstring mcrypt ldap mysqli opcache pdo_mysql pdo_pgsql pgsql zip \
-  && pecl install APCu-5.1.8 \
-  && pecl install memcached-3.0.2 \
-  && pecl install redis-3.1.1 \
-  && docker-php-ext-enable apcu redis memcached \
+  && docker-php-ext-configure zip --with-libzip=/usr \
+  && docker-php-ext-install gd exif intl mbstring ldap mysqli opcache pdo_mysql pdo_pgsql pgsql zip \
+  && pecl install mcrypt-1.0.1 \
+  && pecl install APCu-5.1.11 \
+  && pecl install memcached-3.0.4 \
+  && pecl install redis-4.0.1 \
+  && docker-php-ext-enable mcrypt apcu redis memcached \
 
 # Remove dev packages
   && apk del \
@@ -66,6 +70,7 @@ RUN set -ex \
     libmemcached-dev \
     libjpeg-turbo-dev \
     libpng-dev \
+    libzip-dev \
     openldap-dev \
     pcre-dev \
     postgresql-dev \
@@ -102,9 +107,6 @@ RUN set -ex \
 
 # Wipe excess directories
   && rm -rf /var/www/*
-
-# Make working directory root of NextCloud.
-WORKDIR /opt/nextcloud
 
 COPY root /
 

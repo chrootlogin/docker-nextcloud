@@ -6,14 +6,6 @@
 
 Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fork of OwnCloud.
 
----
-
-**Now featuring PHP 7 support!**
-
-This image was updated to PHP 7.1. If you encounter any issues, please open a github issue.
-
----
-
 ## Features
 
 * Uses latest stable version of **Alpine Linux**, bundled with **PHP 7** and **NGinx**.
@@ -64,8 +56,8 @@ Everything is bundled in the newest stable version.
 
 You can run Nextcloud without a separate database, but I don't recommend it for production setups as it uses SQLite. Another solution is to use an external database provided elsewhere, you can enter the credentials in the installer.
 
-1. Pull the image: `docker pull quay.io/rootlogin/nextcloud`
-2. Run it: `docker run -d --name nextcloud -p 80:80 -v my_local_data_folder:/data quay.io/rootlogin/nextcloud` (Replace *my_local_data_folder* with the path where do you want to store the persistent data)
+1. Pull the image: `docker pull rootlogin/nextcloud`
+2. Run it: `docker run -d --name nextcloud -p 80:80 -v my_local_data_folder:/data rootlogin/nextcloud` (Replace *my_local_data_folder* with the path where do you want to store the persistent data)
 3. Open [localhost](http://localhost) and profit!
 
 The first time you run the application, you can use the Nextcloud setup wizard to install everything. Afterwards it will run directly.
@@ -75,9 +67,9 @@ The first time you run the application, you can use the Nextcloud setup wizard t
 For standard setups I recommend the use of MariaDB, because it is more reliable than SQLite. For example, you can use the offical docker image of MariaDB. For more information refer to the according docker image.
 
 ```
-# docker pull quay.io/rootlogin/nextcloud && docker pull mariadb:10
+# docker pull rootlogin/nextcloud && docker pull mariadb:10
 # docker run -d --name nextcloud_db -v my_db_persistence_folder:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=supersecretpassword -e MYSQL_DATABASE=nextcloud -e MYSQL_USER=nextcloud -e MYSQL_PASSWORD=supersecretpassword mariadb:10
-# docker run -d --name nextcloud --link nextcloud_db:nextcloud_db -p 80:80 -v my_local_data_folder:/data quay.io/rootlogin/nextcloud
+# docker run -d --name nextcloud --link nextcloud_db:nextcloud_db -p 80:80 -v my_local_data_folder:/data rootlogin/nextcloud
 ```
 
 *The auto-connection of the database to nextcloud is not implemented yet. This is why you need to do that manually.*
@@ -104,7 +96,7 @@ You can easily migrate an existing OwnCloud to this Nextcloud docker image.
 2. Create a new folder e.g. /var/my_nextcloud_data
 3. Create a new subfolder called "config" and copy the config.php from your existing instance in there.
 4. Copy your existing "data" folder to */var/my_nextcloud_data*/data
-5. Start the docker container: `docker run -d --name nextcloud -p 80:80 -v /var/my_nextcloud_data:/data quay.io/rootlogin/nextcloud`
+5. Start the docker container: `docker run -d --name nextcloud -p 80:80 -v /var/my_nextcloud_data:/data rootlogin/nextcloud`
 6. Wait until everything is running.
 7. Start the Nextcloud migration command: `docker exec nextcloud occ upgrade`
 8. Disable the maintenance mode of Nextcloud: `docker exec nextcloud occ maintenance:mode --off`
@@ -122,7 +114,7 @@ After=docker.service
 
 [Service]
 Restart=always
-ExecStart=/usr/bin/docker run -p 127.0.0.1:8000:80 -v /data/nextcloud:/data --name nextcloud quay.io/rootlogin/nextcloud
+ExecStart=/usr/bin/docker run -p 127.0.0.1:8000:80 -v /data/nextcloud:/data --name nextcloud rootlogin/nextcloud
 ExecStop=/usr/bin/docker stop -t 2 nextcloud ; /usr/bin/docker rm -f nextcloud
 
 [Install]
@@ -212,8 +204,8 @@ You can change the numerical user id and group id via build arguments.
 
 ```
 $ git clone https://github.com/chrootLogin/docker-nextcloud.git && cd docker-nextcloud
-$ docker build -t quay.io/rootlogin/nextcloud --build-arg UID=1000 --build-arg GID=1000 .
-$ docker run -p 80:80 quay.io/rootlogin/nextcloud
+$ docker build -t rootlogin/nextcloud --build-arg UID=1000 --build-arg GID=1000 .
+$ docker run -p 80:80 rootlogin/nextcloud
 ```
 
 ## Contribution
