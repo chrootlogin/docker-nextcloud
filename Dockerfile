@@ -17,7 +17,9 @@ ARG UID=1501
 ARG GID=1501
 
 RUN set -ex \
-  && apk add --update \
+  && apk update \
+  && apk upgrade \
+  && apk add \
   alpine-sdk \
   autoconf \
   bash \
