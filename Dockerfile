@@ -57,12 +57,12 @@ RUN set -ex \
   && docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-configure ldap \
   && docker-php-ext-configure zip --with-libzip=/usr \
-  && docker-php-ext-install gd exif intl mbstring ldap mysqli opcache pdo_mysql pdo_pgsql pgsql zip \
-  && pecl install mcrypt-1.0.1 \
+  && docker-php-ext-install gd exif intl mbstring ldap mysqli opcache pcntl pdo_mysql pdo_pgsql pgsql zip \
   && pecl install APCu-5.1.11 \
+  && pecl install mcrypt-1.0.1 \
   && pecl install memcached-3.0.4 \
   && pecl install redis-4.0.1 \
-  && docker-php-ext-enable mcrypt apcu redis memcached \
+  && docker-php-ext-enable apcu mcrypt memcached redis \
 # Remove dev packages
   && apk del \
     alpine-sdk \
