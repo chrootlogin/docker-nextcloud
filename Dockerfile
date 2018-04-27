@@ -50,7 +50,6 @@ RUN set -ex \
   tar \
   tini \
   wget \
-
 # PHP Extensions
 # https://docs.nextcloud.com/server/9/admin_manual/installation/source_installation.html
   && docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr \
@@ -62,7 +61,6 @@ RUN set -ex \
   && pecl install memcached-3.0.4 \
   && pecl install redis-4.0.1 \
   && docker-php-ext-enable mcrypt apcu redis memcached \
-
 # Remove dev packages
   && apk del \
     alpine-sdk \
@@ -78,12 +76,10 @@ RUN set -ex \
     pcre-dev \
     postgresql-dev \
   && rm -rf /var/cache/apk/* \
-
-  # Add user for nextcloud
+# Add user for nextcloud
   && addgroup -g ${GID} nextcloud \
   && adduser -u ${UID} -h /opt/nextcloud -H -G nextcloud -s /sbin/nologin -D nextcloud \
   && mkdir -p /opt/nextcloud \
-
 # Download Nextcloud
   && cd /tmp \
   && NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" \
@@ -91,7 +87,6 @@ RUN set -ex \
   && wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.sha256 \
   && wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.asc \
   && wget -q https://nextcloud.com/nextcloud.asc \
-
 # Verify checksum
   && echo "Verifying both integrity and authenticity of ${NEXTCLOUD_TARBALL}..." \
   && CHECKSUM_STATE=$(echo -n $(sha256sum -c ${NEXTCLOUD_TARBALL}.sha256) | tail -c 2) \
@@ -101,13 +96,11 @@ RUN set -ex \
   && if [ -z "${FINGERPRINT}" ]; then echo "Warning! Invalid GPG signature!" && exit 1; fi \
   && if [ "${FINGERPRINT}" != "${NEXTCLOUD_GPG}" ]; then echo "Warning! Wrong GPG fingerprint!" && exit 1; fi \
   && echo "All seems good, now unpacking ${NEXTCLOUD_TARBALL}..." \
-
 # Extract
   && tar xjf ${NEXTCLOUD_TARBALL} --strip-components=1 -C /opt/nextcloud \
 # Remove nextcloud updater for safety
   && rm -rf /opt/nextcloud/updater \
   && rm -rf /tmp/* /root/.gnupg \
-
 # Wipe excess directories
   && rm -rf /var/www/*
 
