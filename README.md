@@ -35,7 +35,7 @@ Everything is bundled in the newest stable version.
 ### Tags
 
 * **latest**: latest stable Nextcloud version (PHP 7)
-* **vX.X.X**: stable version tags of Nextcloud (e.g. v9.0.52) (Version >= 12.0.0 use PHP 7)
+* **X.X.X**: stable version tags of Nextcloud (e.g. v9.0.52) (Version >= 12.0.0 use PHP 7)
 * **develop**: latest development branch (may unstable)
 
 ### Build-time arguments
