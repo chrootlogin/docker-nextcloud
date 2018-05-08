@@ -52,7 +52,7 @@ Everything is bundled in the newest stable version.
 
 ## Usage
 
-### Standalone
+### Standalone
 
 You can run Nextcloud without a separate database, but I don't recommend it for production setups as it uses SQLite. Another solution is to use an external database provided elsewhere, you can enter the credentials in the installer.
 
