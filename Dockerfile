@@ -17,6 +17,10 @@ ARG UID=1501
 ARG GID=1501
 
 RUN set -ex \
+  # Add user for nextcloud
+  && addgroup -g ${GID} nextcloud \
+  && adduser -u ${UID} -h /opt/nextcloud -H -G nextcloud -s /sbin/nologin -D nextcloud \
+  # Install
   && apk update \
   && apk upgrade \
   && apk add \
@@ -78,9 +82,6 @@ RUN set -ex \
     pcre-dev \
     postgresql-dev \
   && rm -rf /var/cache/apk/* \
-# Add user for nextcloud
-  && addgroup -g ${GID} nextcloud \
-  && adduser -u ${UID} -h /opt/nextcloud -H -G nextcloud -s /sbin/nologin -D nextcloud \
   && mkdir -p /opt/nextcloud \
 # Download Nextcloud
   && cd /tmp \
