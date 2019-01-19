@@ -67,8 +67,8 @@ RUN set -ex \
   && pecl install APCu-5.1.16 \
   && pecl install imagick-3.4.3 \
   && pecl install mcrypt-1.0.2 \
-  && pecl install memcached-3.0.4 \
-  && pecl install redis-4.1.1 \
+  && pecl install memcached-3.1.3 \
+  && pecl install redis-4.2.0 \
   && docker-php-ext-enable apcu mcrypt memcached redis \
 # Remove dev packages
   && apk del \
