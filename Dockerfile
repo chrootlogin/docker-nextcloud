@@ -66,7 +66,7 @@ RUN set -ex \
   && docker-php-ext-install gd exif intl mbstring ldap mysqli opcache pcntl pdo_mysql pdo_pgsql pgsql zip \
   && pecl install APCu-5.1.16 \
   && pecl install imagick-3.4.3 \
-  && pecl install mcrypt-1.0.1 \
+  && pecl install mcrypt-1.0.2 \
   && pecl install memcached-3.0.4 \
   && pecl install redis-4.1.1 \
   && docker-php-ext-enable apcu mcrypt memcached redis \
