@@ -64,7 +64,7 @@ RUN set -ex \
   && docker-php-ext-configure ldap \
   && docker-php-ext-configure zip --with-libzip=/usr \
   && docker-php-ext-install gd exif intl mbstring ldap mysqli opcache pcntl pdo_mysql pdo_pgsql pgsql zip \
-  && pecl install APCu-5.1.12 \
+  && pecl install APCu-5.1.16 \
   && pecl install imagick-3.4.3 \
   && pecl install mcrypt-1.0.1 \
   && pecl install memcached-3.0.4 \
