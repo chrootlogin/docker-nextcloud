@@ -69,7 +69,7 @@ RUN set -ex \
   && pecl install mcrypt-1.0.2 \
   && pecl install memcached-3.1.3 \
   && pecl install redis-4.2.0 \
-  && docker-php-ext-enable apcu mcrypt memcached redis \
+  && docker-php-ext-enable apcu imagick mcrypt memcached redis \
 # Remove dev packages
   && apk del \
     alpine-sdk \
