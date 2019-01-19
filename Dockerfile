@@ -32,6 +32,8 @@ RUN set -ex \
   gnupg \
   icu-dev \
   icu-libs \
+  imagemagick \
+  imagemagick-dev \
   libjpeg-turbo \
   libjpeg-turbo-dev \
   libldap \
@@ -62,10 +64,11 @@ RUN set -ex \
   && docker-php-ext-configure ldap \
   && docker-php-ext-configure zip --with-libzip=/usr \
   && docker-php-ext-install gd exif intl mbstring ldap mysqli opcache pcntl pdo_mysql pdo_pgsql pgsql zip \
-  && pecl install APCu-5.1.12 \
-  && pecl install mcrypt-1.0.1 \
-  && pecl install memcached-3.0.4 \
-  && pecl install redis-4.1.1 \
+  && pecl install APCu-5.1.16 \
+  && pecl install imagick-3.4.3 \
+  && pecl install mcrypt-1.0.2 \
+  && pecl install memcached-3.1.3 \
+  && pecl install redis-4.2.0 \
   && docker-php-ext-enable apcu mcrypt memcached redis \
 # Remove dev packages
   && apk del \
@@ -73,6 +76,7 @@ RUN set -ex \
     autoconf \
     freetype-dev \
     icu-dev \
+    imagemagick-dev \
     libmcrypt-dev \
     libmemcached-dev \
     libjpeg-turbo-dev \
