@@ -35,6 +35,8 @@ echo "Preparing environment... (This will take some time...)"
 
 if [ ! -d /data/config ]; then
   mkdir /data/config
+  # Allow installation
+  touch /data/config/CAN_INSTALL
 fi
 
 cp -f /opt/nextcloud/config/config.sample.php /data/config/

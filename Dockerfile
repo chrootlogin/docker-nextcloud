@@ -52,12 +52,15 @@ RUN set -ex \
   pcre-dev \
   postgresql-dev \
   postgresql-libs \
+  python3 \
   samba-client \
   sudo \
   supervisor \
   tar \
   tini \
   wget \
+# Python  
+  && pip3 install supervisor-stdout \
 # PHP Extensions
 # https://docs.nextcloud.com/server/9/admin_manual/installation/source_installation.html
   && docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr \

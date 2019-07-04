@@ -1,5 +1,6 @@
 <?php
 $CONFIG = array(
+  'log_type' => 'errorlog',
   'datadirectory' => '/data/data',
   'tempdirectory' => '/data/tmp',
   'supportedDatabases' => array(
