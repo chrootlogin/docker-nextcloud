@@ -118,7 +118,7 @@ COPY root /
 
 RUN chmod +x /usr/local/bin/run.sh /usr/local/bin/occ /etc/periodic/15min/nextcloud
 
-VOLUME ["/data"]
+VOLUME ["/data","/opt/nextcloud"]
 
 EXPOSE 80
 
