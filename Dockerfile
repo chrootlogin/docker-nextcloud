@@ -29,6 +29,8 @@ RUN set -ex \
     bash \
     freetype \
     freetype-dev \
+    gmp \
+    gmp-dev \
     gnupg \
     icu-dev \
     icu-libs \
@@ -70,7 +72,21 @@ RUN set -ex \
   && docker-php-ext-configure gd --with-freetype=/usr --with-jpeg=/usr \
   && docker-php-ext-configure ldap \
   && docker-php-ext-configure zip \
-  && docker-php-ext-install gd exif intl mbstring ldap mysqli opcache pcntl pdo_mysql pdo_pgsql pgsql zip \
+  && docker-php-ext-install \ 
+    bcmath \
+    exif \ 
+    gd \
+    gmp \
+    intl \
+    ldap \
+    mbstring \
+    mysqli \
+    opcache \
+    pcntl \
+    pdo_mysql \
+    pdo_pgsql \ 
+    pgsql \ 
+    zip \
   && pecl channel-update pecl.php.net \
   && pecl install APCu-5.1.18 \
   && pecl install imagick-3.4.4 \
@@ -83,6 +99,7 @@ RUN set -ex \
     alpine-sdk \
     autoconf \
     freetype-dev \
+    gmp-dev \
     icu-dev \
     imagemagick-dev \
     libmcrypt-dev \
