@@ -53,6 +53,7 @@ RUN set -ex \
   postgresql-dev \
   postgresql-libs \
   python3 \
+  py3-pip \
   samba-client \
   sudo \
   supervisor \
