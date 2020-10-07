@@ -12,7 +12,7 @@ LABEL maintainer="Simon Erhardt <hello@rootlogin.ch>" \
   org.label-schema.schema-version="1.0"
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
-ARG NEXTCLOUD_VERSION=19.0.2
+ARG NEXTCLOUD_VERSION=19.0.3
 ARG UID=1501
 ARG GID=1501
 
