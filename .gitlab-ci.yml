@@ -11,5 +11,5 @@ build-x86:
   image: docker:latest
   stage: build
   script:
-    docker build -t "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-x86" .
-    docker push "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-x86"
+    - docker build -t "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-x86" .
+    - docker push "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-x86"
