@@ -1,3 +1,7 @@
+variables:
+  CI_IMAGE: rootlogin/nextcloud
+  BUILDX_VER: 0.5.1
+
 stages:
   - build
 
@@ -21,7 +25,7 @@ build-amd64:
       --platform linux/amd64
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-amd64" .
+      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-amd64" .
 
 build-x86:
   image: docker:latest
@@ -31,7 +35,7 @@ build-x86:
       --platform linux/386
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-x86" .
+      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-x86" .
 
 build-arm64:
   image: docker:latest
@@ -41,4 +45,4 @@ build-arm64:
       --platform linux/arm64/v8
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-arm64" .
+      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-arm64" .
