@@ -12,7 +12,7 @@ LABEL maintainer="Simon Erhardt <hello@rootlogin.ch>" \
   org.label-schema.schema-version="1.0"
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
-ARG NEXTCLOUD_VERSION=19.0.6
+ARG NEXTCLOUD_VERSION=20.0.0
 ARG UID=1501
 ARG GID=1501
 
@@ -88,11 +88,11 @@ RUN set -ex \
     pgsql \ 
     zip \
   && pecl channel-update pecl.php.net \
-  && pecl install APCu-5.1.18 \
+  && pecl install APCu-5.1.19 \
   && pecl install imagick-3.4.4 \
-  && pecl install mcrypt-1.0.3 \
+  && pecl install mcrypt-1.0.4 \
   && pecl install memcached-3.1.5 \
-  && pecl install redis-5.3.1 \
+  && pecl install redis-5.3.2 \
   && docker-php-ext-enable apcu imagick mcrypt memcached redis \
 # Remove dev packages
   && apk del \
