@@ -74,3 +74,5 @@ deploy:
       --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-arm64"
       --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-armv7"
     - docker manifest push "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
+    - docker tag "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG" "$CI_IMAGE:$CI_COMMIT_REF_SLUG"
+    - docker push "$CI_IMAGE:$CI_COMMIT_REF_SLUG"
