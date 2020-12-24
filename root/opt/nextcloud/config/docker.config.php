@@ -21,4 +21,7 @@ $CONFIG = array(
       'writable' => true,
     ),
   ),
+  'trusted_proxies' => array(
+    '172.16.0.0/12', // Docker container normally use this IP-Block
+  ),
 );
