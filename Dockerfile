@@ -1,7 +1,8 @@
-FROM php:7.4-fpm-alpine
-
+ARG BASE_ARCH=amd64
 ARG BUILD_DATE
 ARG VCS_REF
+
+FROM ${BASE_ARCH}/php:7.4-fpm-alpine
 
 LABEL maintainer="Simon Erhardt <hello@rootlogin.ch>" \
   org.label-schema.name="Nextcloud" \

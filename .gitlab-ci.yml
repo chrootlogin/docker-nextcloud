@@ -7,9 +7,14 @@ services:
 before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
 
-build-x86:
+build-amd64:
   image: docker:latest
   stage: build
   script:
-    - docker build -t "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-x86" .
-    - docker push "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-x86"
+    - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+    - docker build 
+      --build-arg "BASE_ARCH=amd64" 
+      --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
+      --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
+      -t "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-amd64" .
+    - docker push "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-amd64"
