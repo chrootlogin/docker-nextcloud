@@ -5,28 +5,40 @@ services:
   - docker:dind
 
 before_script:
+  - export DOCKER_CLI_EXPERIMENTAL=enabled
+  - mkdir -p /root/.docker/cli-plugins
+  - wget -qO ~/.docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v${BUILDX_VER}/buildx-v${BUILDX_VER}.linux-amd64
+  - chmod +x /root/.docker/cli-plugins/docker-buildx
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+  - docker buildx create --use
 
 build-amd64:
   image: docker:latest
   stage: build
   script:
-    - docker run --rm --privileged multiarch/qemu-user-static:register --reset
-    - docker build 
-      --build-arg "BASE_ARCH=amd64" 
+    - docker buildx build --push
+      --platform linux/amd64
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-amd64" .
-    - docker push "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-amd64"
 
-build-arm32v7:
+build-x86:
   image: docker:latest
   stage: build
   script:
-    - docker run --rm --privileged multiarch/qemu-user-static:register --reset
-    - docker build 
-      --build-arg "BASE_ARCH=arm32v7" 
+    - docker buildx build --push
+      --platform linux/386
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-arm32v7" .
-    - docker push "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-arm32v7"
+      -t "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-x86" .
+
+build-arm64:
+  image: docker:latest
+  stage: build
+  script:
+    - docker buildx build --push
+      --platform linux/arm64/v8
+      --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
+      --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
+      -t "$CI_REGISTRY/rootlogin/nextcloud:$CI_COMMIT_SHORT_SHA-arm64" .
