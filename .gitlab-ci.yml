@@ -59,6 +59,46 @@ build-armv7:
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-armv7" .
 
+build-armv5:
+  image: docker:latest
+  stage: build
+  script:
+    - docker buildx build --push
+      --platform linux/arm/v5
+      --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
+      --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
+      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-armv5" .
+
+build-mips64le:
+  image: docker:latest
+  stage: build
+  script:
+    - docker buildx build --push
+      --platform linux/mips64le
+      --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
+      --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
+      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-mips64le" .
+
+build-ppc64le:
+  image: docker:latest
+  stage: build
+  script:
+    - docker buildx build --push
+      --platform linux/ppc64le
+      --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
+      --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
+      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-ppc64le" .
+
+build-s390x:
+  image: docker:latest
+  stage: build
+  script:
+    - docker buildx build --push
+      --platform linux/s390x
+      --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
+      --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
+      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-s390x" .
+
 deploy:
   image: docker:latest
   stage: deploy
@@ -67,12 +107,20 @@ deploy:
     - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-x86"
     - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-arm64"
     - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-armv7"
+    - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-armv5"
+    - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-mips64le"
+    - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-ppc64le"
+    - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-s390x"
     - docker manifest create
       "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
       --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-amd64"
       --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-x86"
       --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-arm64"
       --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-armv7"
+      --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-armv5"
+      --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-mips64le"
+      --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-ppc64le"
+      --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-s390x"
     - docker manifest push "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
     - docker tag "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG" "$CI_IMAGE:$CI_COMMIT_REF_SLUG"
     - docker push "$CI_IMAGE:$CI_COMMIT_REF_SLUG"
