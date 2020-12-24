@@ -1,0 +1,11 @@
+stages:
+  - build
+
+services:
+  - docker:dind
+
+build-x86:
+  image: docker:latest
+  stage: build
+  script:
+    docker build -t gitlab.com/rootlogin/nextcloud .
