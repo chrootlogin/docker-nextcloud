@@ -67,11 +67,9 @@ deploy:
     - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-arm64"
     - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-armv7"
     - docker manifest create
-      "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA"
+      "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
       --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-amd64"
       --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-x86"
       --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-arm64"
       --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-armv7"
-    - docker manifest push "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA"
-    - docker tag "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
-    - docker push "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
+    - docker manifest push "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
