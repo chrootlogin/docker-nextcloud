@@ -98,5 +98,6 @@ deploy:
       --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-ppc64le"
       --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_SHORT_SHA-s390x"
     - docker manifest push "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
+    - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
     - docker tag "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG" "$CI_IMAGE:$CI_COMMIT_REF_SLUG"
     - docker push "$CI_IMAGE:$CI_COMMIT_REF_SLUG"
