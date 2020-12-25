@@ -30,7 +30,7 @@ build-amd64:
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-amd64" .
-  retry: 1
+  retry: 2
 
 build-x86:
   image: docker:latest
@@ -41,7 +41,7 @@ build-x86:
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-x86" .
-  retry: 1
+  retry: 2
 
 build-arm64:
   image: docker:latest
@@ -52,7 +52,7 @@ build-arm64:
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-arm64" .
-  retry: 1
+  retry: 2
 
 build-armv7:
   image: docker:latest
@@ -63,7 +63,7 @@ build-armv7:
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-armv7" .
-  retry: 1
+  retry: 2
 
 build-ppc64le:
   image: docker:latest
@@ -74,7 +74,7 @@ build-ppc64le:
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-ppc64le" .
-  retry: 1
+  retry: 2
 
 build-s390x:
   image: docker:latest
@@ -85,7 +85,7 @@ build-s390x:
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-s390x" .
-  retry: 1
+  retry: 2
 
 push-docker-hub:
   image: docker:latest
@@ -106,7 +106,6 @@ push-docker-hub:
       --amend "$CI_IMAGE:$CI_DOCKER_TAG-ppc64le"
       --amend "$CI_IMAGE:$CI_DOCKER_TAG-s390x"
     - docker manifest push "$CI_IMAGE:$CI_DOCKER_TAG"
-  retry: 1
 
 push-quay-io:
   image: docker:latest
@@ -147,7 +146,6 @@ push-quay-io:
       --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-ppc64le"
       --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-s390x"
     - docker manifest push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG"
-  retry: 1
 
 webhook-microbadger:
   image: curlimages/curl
