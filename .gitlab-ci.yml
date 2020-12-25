@@ -77,6 +77,15 @@ build-arm64:
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-arm64" .
 
+build-armv6:
+  extends: .buildContainerJob
+  script:
+    - docker buildx build --push
+      --platform linux/arm/v6
+      --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
+      --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
+      -t "$CI_IMAGE:$CI_DOCKER_TAG-armv6" .
+
 build-armv7:
   extends: .buildContainerJob
   script:
@@ -111,6 +120,7 @@ push-docker-hub:
     - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-amd64"
     - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-x86"
     - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-arm64"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-armv6"
     - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-armv7"
     - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-ppc64le"
     - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-s390x"
@@ -119,6 +129,7 @@ push-docker-hub:
       --amend "$CI_IMAGE:$CI_DOCKER_TAG-amd64"
       --amend "$CI_IMAGE:$CI_DOCKER_TAG-x86"
       --amend "$CI_IMAGE:$CI_DOCKER_TAG-arm64"
+      --amend "$CI_IMAGE:$CI_DOCKER_TAG-armv6"
       --amend "$CI_IMAGE:$CI_DOCKER_TAG-armv7"
       --amend "$CI_IMAGE:$CI_DOCKER_TAG-ppc64le"
       --amend "$CI_IMAGE:$CI_DOCKER_TAG-s390x"
@@ -141,6 +152,10 @@ push-quay-io:
     - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-arm64"
     - docker tag "$CI_IMAGE:$CI_DOCKER_TAG-arm64" "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-arm64"
     - docker push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-arm64"
+    # armv6
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-armv6"
+    - docker tag "$CI_IMAGE:$CI_DOCKER_TAG-armv6" "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-armv6"
+    - docker push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-armv6"
     # armv7
     - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-armv7"
     - docker tag "$CI_IMAGE:$CI_DOCKER_TAG-armv7" "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-armv7"
@@ -159,6 +174,7 @@ push-quay-io:
       --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-amd64"
       --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-x86"
       --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-arm64"
+      --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-armv6"
       --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-armv7"
       --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-ppc64le"
       --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-s390x"
