@@ -18,13 +18,14 @@ Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fo
 * Works with MySQL/MariaDB and PostgreSQL (server not included).
 * Supports uploads up to 10GB.
 * This image is also available via [Quay.io](http://quay.io/rootlogin/nextcloud).
+* **NEW!** Multi architecture support (x86,amd64,armv7,arm64,ppc64le,s390x)!
 
 ## Container environment
 
 ### Included software
 
 * Alpine Linux
-* **PHP 7**
+* PHP 7
 * APCu
 * NGinx
 * cron
@@ -34,9 +35,10 @@ Everything is bundled in the newest stable version.
 
 ### Tags
 
-* **latest**: latest stable Nextcloud version (PHP 7)
-* **X.X.X**: stable version tags of Nextcloud (e.g. v9.0.52) (Version >= 12.0.0 use PHP 7)
-* **develop**: latest development branch (may unstable)
+* **latest**: Latest stable Nextcloud version (PHP 7)
+* **X.X.X**: Stable version tags of Nextcloud (e.g. v9.0.52) (Version >= 12.0.0 use PHP 7)
+* **develop**: Latest development branch (may unstable)
+* **TAG-ARCHITECTURE** (Example: develop-arm64): Tag with fixed processor architecture
 
 ### Build-time arguments
 * **NEXTCLOUD_GPG**: Fingerprint of Nextcloud signing key
@@ -216,4 +218,4 @@ This stuff is released under GPL. I'm happy about every pull-request, that makes
 
 If you want to donate for this project, you can send me some coins to the following address.
 
-**Bitcoin**: 1CCzVGMgoEbd5Zn84QnqjNFRj4PZtAoTrC
+**Bitcoin**: bc1qvemyhud469qe4v6lcsn8sxu5e57m4sw3u2ujff
