@@ -5,6 +5,8 @@ on: [ push, pull_request ]
 jobs:
   build-env:
     runs-on: ubuntu-latest
+    outputs:
+      docker-tag: ${{ steps.docker-tag.outputs.tag }}
     steps:
       - name: Retrieve docker tag
         shell: bash
@@ -13,7 +15,7 @@ jobs:
 
           [ "$BRANCH_NAME" == "master" ] && export DOCKER_TAG="latest" || export DOCKER_TAG="$BRANCH_NAME"
           echo "::set-output name=tag::$DOCKER_TAG"
-        id: docker
+        id: docker-tag
 
   build-amd64:
     runs-on: ubuntu-latest
@@ -26,13 +28,11 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Build
         run: |
-          echo "##[set-output name=imagename;]rootlogin/nextcloud:${{ needs.build-env.outputs.docker.tag }}-amd64"
-
           docker buildx build \
             --platform linux/amd64 \
             --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" \
             --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' \
-            -t "rootlogin/nextcloud:${{ needs.build-env.outputs.docker.tag }}-amd64" .
+            -t "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-amd64" .
 
   build-x86:
     runs-on: ubuntu-latest
@@ -46,11 +46,9 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          echo "##[set-output name=imagename;]rootlogin/nextcloud:${{ needs.build-env.outputs.docker.tag }}-x86"
-
           docker buildx build \
             --platform linux/386 \
             --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" \
             --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' \
-            -t "rootlogin/nextcloud:${{ needs.build-env.outputs.docker.tag }}-x86" .
+            -t "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-x86" .
 
