@@ -10,8 +10,8 @@ services:
   - docker:dind
 
 before_script:
-  - "[ $CI_COMMIT_REF_SLUG == 'master' ] && export CI_DOCKER_TAG='latest' || export CI_DOCKER_TAG='$CI_COMMIT_REF_SLUG'"
-  - "echo 'Using CI_DOCKER_TAG: $CI_DOCKER_TAG'"
+  - "[ $$CI_COMMIT_REF_SLUG == 'master' ] && export CI_DOCKER_TAG='latest' || export CI_DOCKER_TAG='$$CI_COMMIT_REF_SLUG'"
+  - "echo 'Using CI_DOCKER_TAG: $$CI_DOCKER_TAG'"
   - export DOCKER_CLI_EXPERIMENTAL=enabled
   - mkdir -p /root/.docker/cli-plugins
   - wget -qO ~/.docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v${BUILDX_VER}/buildx-v${BUILDX_VER}.linux-amd64
