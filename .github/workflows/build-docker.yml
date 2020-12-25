@@ -11,7 +11,7 @@ jobs:
         run: |
           export BRANCH_NAME=${GITHUB_REF#refs/heads/}
 
-          [ "$BRANCH_NAME" == "master" ] && export CI_DOCKER_TAG="latest" || export CI_DOCKER_TAG="${GITHUB_REF##*/}"
+          [ "$BRANCH_NAME" == "master" ] && export CI_DOCKER_TAG="latest" || export CI_DOCKER_TAG="$BRANCH_NAME"
           echo "##[set-output name=tag;]$CI_DOCKER_TAG"
         id: docker
 
