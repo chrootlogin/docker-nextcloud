@@ -3,8 +3,21 @@ name: docker
 on: [ push, pull_request ]
 
 jobs:
+  build-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retrieve docker tag
+        shell: bash
+        run: |
+          export BRANCH_NAME=${GITHUB_REF#refs/heads/}
+
+          [ "$BRANCH_NAME" == "master" ] && export CI_DOCKER_TAG="latest" || export CI_DOCKER_TAG="${GITHUB_REF##*/}"
+          echo "##[set-output name=tag;]$CI_DOCKER_TAG"
+        id: docker
+
   build-amd64:
     runs-on: ubuntu-latest
+    needs: [ build-env ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -13,17 +26,17 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Build
         run: |
-          [ "$CI_COMMIT_REF_SLUG" == "master" ] && export CI_DOCKER_TAG="latest" || export CI_DOCKER_TAG="${GITHUB_REF##*/}"
-          echo "##[set-output name=tag;]$CI_DOCKER_TAG"
+          echo "##[set-output name=imagename;]rootlogin/nextcloud:${{ needs.build-env.outputs.docker.tag }}-amd64"
 
           docker buildx build \
             --platform linux/amd64 \
             --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" \
             --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' \
-            -t "$CI_IMAGE:$CI_DOCKER_TAG-amd64" .
+            -t "rootlogin/nextcloud:${{ needs.build-env.outputs.docker.tag }}-amd64" .
 
   build-x86:
     runs-on: ubuntu-latest
+    needs: [ build-env ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -31,13 +44,13 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@v1
       - name: Build
+        shell: bash
         run: |
-          [ "$CI_COMMIT_REF_SLUG" == "master" ] && export CI_DOCKER_TAG="latest" || export CI_DOCKER_TAG="${GITHUB_REF##*/}"
-          echo "##[set-output name=tag;]$CI_DOCKER_TAG"
+          echo "##[set-output name=imagename;]rootlogin/nextcloud:${{ needs.build-env.outputs.docker.tag }}-x86"
 
           docker buildx build \
             --platform linux/386 \
             --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" \
             --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' \
-            -t "$CI_IMAGE:$CI_DOCKER_TAG-x86" .
+            -t "rootlogin/nextcloud:${{ needs.build-env.outputs.docker.tag }}-x86" .
 
