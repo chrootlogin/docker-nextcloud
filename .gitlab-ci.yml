@@ -4,8 +4,8 @@ variables:
 
 stages:
   - build
-  - deploy
-  - after_deploy
+  - push
+  - afterwork
 
 services:
   - docker:dind
@@ -87,9 +87,9 @@ build-s390x:
       -t "$CI_IMAGE:$CI_DOCKER_TAG-s390x" .
   retry: 1
 
-deploy-docker-hub:
+push-docker-hub:
   image: docker:latest
-  stage: deploy
+  stage: push
   script:
     - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-amd64"
     - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-x86"
@@ -108,9 +108,9 @@ deploy-docker-hub:
     - docker manifest push "$CI_IMAGE:$CI_DOCKER_TAG"
   retry: 1
 
-deploy-quay-io:
+push-quay-io:
   image: docker:latest
-  stage: deploy
+  stage: push
   script:
     - docker login -u "$QUAYIO_USERNAME" -p "$QUAYIO_TOKEN" quay.io
     # x86
@@ -151,13 +151,13 @@ deploy-quay-io:
 
 webhook-microbadger:
   image: curlimages/curl
-  stage: after_deploy
+  stage: afterwork
   script:
     - curl -X POST https://hooks.microbadger.com/images/rootlogin/nextcloud/$MICROBADGER_WEBHOOK
 
 webhook-pushover:
   image: curlimages/curl
-  stage: after_deploy
+  stage: afterwork
   script:
     - curl -s 
       --form-string "token=$PUSHOVER_TOKEN" 
