@@ -27,7 +27,7 @@ build-amd64:
       --platform linux/amd64
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64" .
+      -t "$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64" .
 
 build-x86:
   image: docker:latest
@@ -37,7 +37,7 @@ build-x86:
       --platform linux/386
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86" .
+      -t "$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86" .
 
 build-arm64:
   image: docker:latest
@@ -47,7 +47,7 @@ build-arm64:
       --platform linux/arm64/v8
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64" .
+      -t "$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64" .
 
 build-armv7:
   image: docker:latest
@@ -57,7 +57,7 @@ build-armv7:
       --platform linux/arm/v7
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7" .
+      -t "$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7" .
 
 build-ppc64le:
   image: docker:latest
@@ -67,7 +67,7 @@ build-ppc64le:
       --platform linux/ppc64le
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le" .
+      -t "$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le" .
 
 build-s390x:
   image: docker:latest
@@ -77,27 +77,24 @@ build-s390x:
       --platform linux/s390x
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x" .
+      -t "$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x" .
 
-deploy:
+deploy-docker-hub:
   image: docker:latest
   stage: deploy
   script:
-    - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64"
-    - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86"
-    - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64"
-    - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7"
-    - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le"
-    - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x"
+    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64"
+    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86"
+    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64"
+    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7"
+    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le"
+    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x"
     - docker manifest create
-      "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
-      --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64"
-      --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86"
-      --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64"
-      --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7"
-      --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le"
-      --amend "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x"
-    - docker manifest push "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
-    - docker pull "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
-    - docker tag "$CI_REGISTRY/$CI_IMAGE:$CI_COMMIT_REF_SLUG" "$CI_IMAGE:$CI_COMMIT_REF_SLUG"
-    - docker push "$CI_IMAGE:$CI_COMMIT_REF_SLUG"
+      "$CI_IMAGE:$CI_COMMIT_REF_SLUG"
+      --amend "$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64"
+      --amend "$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86"
+      --amend "$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64"
+      --amend "$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7"
+      --amend "$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le"
+      --amend "$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x"
+    - docker manifest push "$CI_IMAGE:$CI_COMMIT_REF_SLUG"
