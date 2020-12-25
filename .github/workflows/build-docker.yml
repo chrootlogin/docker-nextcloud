@@ -87,7 +87,7 @@ jobs:
             --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' \
             -t "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-armv6" .
 
-build-armv7:
+  build-armv7:
     runs-on: ubuntu-latest
     needs: [ build-env ]
     steps:
@@ -112,7 +112,7 @@ build-armv7:
             --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' \
             -t "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-armv7" .
 
-build-arm64:
+  build-arm64:
     runs-on: ubuntu-latest
     needs: [ build-env ]
     steps:
@@ -137,7 +137,7 @@ build-arm64:
             --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' \
             -t "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-arm64" .
 
-build-ppc64le:
+  build-ppc64le:
     runs-on: ubuntu-latest
     needs: [ build-env ]
     steps:
@@ -162,7 +162,7 @@ build-ppc64le:
             --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' \
             -t "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-ppc64le" .
 
-build-s390x:
+  build-s390x:
     runs-on: ubuntu-latest
     needs: [ build-env ]
     steps:
