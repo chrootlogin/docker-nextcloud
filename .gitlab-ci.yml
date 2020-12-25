@@ -10,12 +10,13 @@ services:
   - docker:dind
 
 before_script:
+  - "[ $CI_COMMIT_REF_SLUG == 'master' ] && export CI_DOCKER_TAG='latest' || export CI_DOCKER_TAG='$CI_COMMIT_REF_SLUG'"
+  - "echo 'Using CI_DOCKER_TAG: $CI_DOCKER_TAG'"
   - export DOCKER_CLI_EXPERIMENTAL=enabled
   - mkdir -p /root/.docker/cli-plugins
   - wget -qO ~/.docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v${BUILDX_VER}/buildx-v${BUILDX_VER}.linux-amd64
   - chmod +x /root/.docker/cli-plugins/docker-buildx
   - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_TOKEN"
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --use
 
@@ -27,7 +28,8 @@ build-amd64:
       --platform linux/amd64
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64" .
+      -t "$CI_IMAGE:$CI_DOCKER_TAG-amd64" .
+  retry: 1
 
 build-x86:
   image: docker:latest
@@ -37,7 +39,8 @@ build-x86:
       --platform linux/386
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86" .
+      -t "$CI_IMAGE:$CI_DOCKER_TAG-x86" .
+  retry: 1
 
 build-arm64:
   image: docker:latest
@@ -47,7 +50,8 @@ build-arm64:
       --platform linux/arm64/v8
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64" .
+      -t "$CI_IMAGE:$CI_DOCKER_TAG-arm64" .
+  retry: 1
 
 build-armv7:
   image: docker:latest
@@ -57,7 +61,8 @@ build-armv7:
       --platform linux/arm/v7
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7" .
+      -t "$CI_IMAGE:$CI_DOCKER_TAG-armv7" .
+  retry: 1
 
 build-ppc64le:
   image: docker:latest
@@ -67,7 +72,8 @@ build-ppc64le:
       --platform linux/ppc64le
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le" .
+      -t "$CI_IMAGE:$CI_DOCKER_TAG-ppc64le" .
+  retry: 1
 
 build-s390x:
   image: docker:latest
@@ -77,27 +83,29 @@ build-s390x:
       --platform linux/s390x
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
-      -t "$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x" .
+      -t "$CI_IMAGE:$CI_DOCKER_TAG-s390x" .
+  retry: 1
 
 deploy-docker-hub:
   image: docker:latest
   stage: deploy
   script:
-    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64"
-    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86"
-    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64"
-    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7"
-    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le"
-    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-amd64"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-x86"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-arm64"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-armv7"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-ppc64le"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-s390x"
     - docker manifest create
-      "$CI_IMAGE:$CI_COMMIT_REF_SLUG"
-      --amend "$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64"
-      --amend "$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86"
-      --amend "$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64"
-      --amend "$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7"
-      --amend "$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le"
-      --amend "$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x"
-    - docker manifest push "$CI_IMAGE:$CI_COMMIT_REF_SLUG"
+      "$CI_IMAGE:$CI_DOCKER_TAG"
+      --amend "$CI_IMAGE:$CI_DOCKER_TAG-amd64"
+      --amend "$CI_IMAGE:$CI_DOCKER_TAG-x86"
+      --amend "$CI_IMAGE:$CI_DOCKER_TAG-arm64"
+      --amend "$CI_IMAGE:$CI_DOCKER_TAG-armv7"
+      --amend "$CI_IMAGE:$CI_DOCKER_TAG-ppc64le"
+      --amend "$CI_IMAGE:$CI_DOCKER_TAG-s390x"
+    - docker manifest push "$CI_IMAGE:$CI_DOCKER_TAG"
+  retry: 1
 
 deploy-quay-io:
   image: docker:latest
@@ -105,36 +113,37 @@ deploy-quay-io:
   script:
     - docker login -u "$QUAYIO_USERNAME" -p "$QUAYIO_TOKEN" quay.io
     # x86
-    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86"
-    - docker tag "$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86" "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86"
-    - docker push "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-x86"
+    - docker tag "$CI_IMAGE:$CI_DOCKER_TAG-x86" "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-x86"
+    - docker push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-x86"
     # amd64
-    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64"
-    - docker tag "$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64" "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64"
-    - docker push "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-amd64"
+    - docker tag "$CI_IMAGE:$CI_DOCKER_TAG-amd64" "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-amd64"
+    - docker push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-amd64"
     # arm64
-    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64"
-    - docker tag "$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64" "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64"
-    - docker push "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-arm64"
+    - docker tag "$CI_IMAGE:$CI_DOCKER_TAG-arm64" "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-arm64"
+    - docker push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-arm64"
     # armv7
-    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7"
-    - docker tag "$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7" "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7"
-    - docker push "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-armv7"
+    - docker tag "$CI_IMAGE:$CI_DOCKER_TAG-armv7" "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-armv7"
+    - docker push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-armv7"
     # ppc64le
-    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le"
-    - docker tag "$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le" "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le"
-    - docker push "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-ppc64le"
+    - docker tag "$CI_IMAGE:$CI_DOCKER_TAG-ppc64le" "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-ppc64le"
+    - docker push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-ppc64le"
     # s390x
-    - docker pull "$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x"
-    - docker tag "$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x" "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x"
-    - docker push "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x"
+    - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-s390x"
+    - docker tag "$CI_IMAGE:$CI_DOCKER_TAG-s390x" "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-s390x"
+    - docker push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-s390x"
     # Multi-arch manifest
     - docker manifest create
-      "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
-      --amend "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-amd64"
-      --amend "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-x86"
-      --amend "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-arm64"
-      --amend "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-armv7"
-      --amend "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-ppc64le"
-      --amend "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG-s390x"
-    - docker manifest push "quay.io/$CI_IMAGE:$CI_COMMIT_REF_SLUG"
+      "quay.io/$CI_IMAGE:$CI_DOCKER_TAG"
+      --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-amd64"
+      --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-x86"
+      --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-arm64"
+      --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-armv7"
+      --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-ppc64le"
+      --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-s390x"
+    - docker manifest push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG"
+  retry: 1
