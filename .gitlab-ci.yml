@@ -5,6 +5,7 @@ variables:
 stages:
   - build
   - deploy
+  - after_deploy
 
 services:
   - docker:dind
@@ -147,3 +148,22 @@ deploy-quay-io:
       --amend "quay.io/$CI_IMAGE:$CI_DOCKER_TAG-s390x"
     - docker manifest push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG"
   retry: 1
+
+webhook-microbadger:
+  image: curlimages/curl
+  stage: after_deploy
+  script:
+    - curl -X POST https://hooks.microbadger.com/images/rootlogin/nextcloud/$MICROBADGER_WEBHOOK
+
+webhook-pushover:
+  image: curlimages/curl
+  stage: after_deploy
+  script:
+    - curl -s 
+      --form-string "token=$PUSHOVER_TOKEN" 
+      --form-string "user=$PUSHOVER_USER" 
+      --form-string "title=GitLab CI" 
+      --form-string "message=Image $CI_IMAGE:$CI_DOCKER_TAG has been published!" 
+      --form-string "sound=pushover" 
+      --form-string "priority=0" 
+      https://api.pushover.net/1/messages.jso
