@@ -46,6 +46,9 @@ ensureContainer:
   services:
     - docker:dind
   before_script:
+    - '[ "$CI_COMMIT_REF_SLUG" == "master" ] && export CI_DOCKER_TAG="latest" || export CI_DOCKER_TAG="$CI_COMMIT_REF_SLUG"'
+    - 'echo "Using CI_DOCKER_TAG: $CI_DOCKER_TAG"'
+    - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_TOKEN"
     - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - docker buildx create --use
   retry: 2
