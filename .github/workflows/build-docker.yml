@@ -1,6 +1,6 @@
 name: docker
 
-on: [ push, pull_request ]
+on: [ push ]
 
 jobs:
   build-env:
@@ -222,4 +222,19 @@ jobs:
         shell: bash
         run: docker manifest push "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}"
 
+  notify:
+    runs-on: ubuntu-latest
+    needs: [ build-env, build-amd64, build-x86, build-armv6, build-armv7, build-arm64, build-ppc64le, build-s390x, push-docker-hub ]
+    steps:
+      - name: Send pushover notification
+        shell: bash
+        run: |
+          curl -s \
+            --form-string "token=${{ secrets.PUSHOVER_TOKEN }}" \
+            --form-string "user=${{ secrets.PUSHOVER_USER }}" \
+            --form-string "title=GitHub Action" \
+            --form-string "message=Image rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }} has been published!" \
+            --form-string "sound=pushover" \
+            --form-string "priority=0" \
+            https://api.pushover.net/1/messages.json
 
