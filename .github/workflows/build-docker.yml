@@ -13,8 +13,8 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Build
         run: |
-          [ "$CI_COMMIT_REF_SLUG" == "master" ] && export CI_DOCKER_TAG="latest" || export CI_DOCKER_TAG="$CI_COMMIT_REF_SLUG"
-          echo "Using CI_DOCKER_TAG: $CI_DOCKER_TAG"
+          [ "$CI_COMMIT_REF_SLUG" == "master" ] && export CI_DOCKER_TAG="latest" || export CI_DOCKER_TAG="${GITHUB_REF##*/}"
+          echo "##[set-output name=tag;]$CI_DOCKER_TAG"
 
           docker buildx build \
             --platform linux/amd64 \
@@ -32,7 +32,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Build
         run: |
-          [ "$CI_COMMIT_REF_SLUG" == "master" ] && export CI_DOCKER_TAG="latest" || export CI_DOCKER_TAG="$CI_COMMIT_REF_SLUG"
+          [ "$CI_COMMIT_REF_SLUG" == "master" ] && export CI_DOCKER_TAG="latest" || export CI_DOCKER_TAG="${GITHUB_REF##*/}"
           echo "Using CI_DOCKER_TAG: $CI_DOCKER_TAG"
 
           docker buildx build \
