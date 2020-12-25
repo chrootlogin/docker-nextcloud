@@ -218,13 +218,75 @@ jobs:
             --amend "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-arm64" \
             --amend "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-ppc64le" \
             --amend "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-s390x"
-      - name: Create multi-arch manifest
+      - name: Push multi-arch manifest
         shell: bash
         run: docker manifest push "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}"
 
+  push-quayio:
+    runs-on: ubuntu-latest
+    needs: [ build-env, build-amd64, build-x86, build-armv6, build-armv7, build-arm64, build-ppc64le, build-s390x ]
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to Quay.io
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAYIO_USERNAME }}
+          password: ${{ secrets.QUAYIO_TOKEN }}
+      - name: Pull, re-tag and push
+        shell: bash
+        run: |
+          # x86
+          docker pull "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-x86"
+          docker tag "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-x86" "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-x86"
+          docker push "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-x86"
+          # amd64
+          docker pull "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-amd64"
+          docker tag "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-amd64" "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-amd64"
+          docker push "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-amd64"
+          # armv6
+          docker pull "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-armv6"
+          docker tag "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-armv6" "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-armv6"
+          docker push "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-armv6"
+          # armv7
+          docker pull "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-armv7"
+          docker tag "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-armv7" "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-armv7"
+          docker push "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-armv7"
+          # arm64
+          docker pull "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-arm64"
+          docker tag "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-arm64" "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-arm64"
+          docker push "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-arm64"
+          # ppc64le
+          docker pull "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-ppc64le"
+          docker tag "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-ppc64le" "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-ppc64le"
+          docker push "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-ppc64le"
+          # s390x
+          docker pull "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-s390x"
+          docker tag "rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-s390x" "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-s390x"
+          docker push "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-s390x"
+      - name: Create multi-arch manifest
+        shell: bash
+        run: |
+          docker manifest create \
+            "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}" \
+            --amend "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-x86" \
+            --amend "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-amd64" \
+            --amend "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-armv6" \
+            --amend "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-armv7" \
+            --amend "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-arm64" \
+            --amend "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-ppc64le" \
+            --amend "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}-s390x"
+      - name: Push multi-arch manifest
+        shell: bash
+        run: docker manifest push "quay.io/rootlogin/nextcloud:${{ needs.build-env.outputs.docker-tag }}"
+
   notify:
     runs-on: ubuntu-latest
-    needs: [ build-env, build-amd64, build-x86, build-armv6, build-armv7, build-arm64, build-ppc64le, build-s390x, push-docker-hub ]
+    needs: [ build-env, build-amd64, build-x86, build-armv6, build-armv7, build-arm64, build-ppc64le, build-s390x, push-docker-hub, push-quayio ]
     steps:
       - name: Send pushover notification
         shell: bash
@@ -237,4 +299,7 @@ jobs:
             --form-string "sound=pushover" \
             --form-string "priority=0" \
             https://api.pushover.net/1/messages.json
+      - name: Update microbadger
+        shell: bash
+        run: curl -X POST https://hooks.microbadger.com/images/rootlogin/nextcloud/${{ secrets.MICROBADGER_WEBHOOK }}
 
