@@ -33,7 +33,7 @@ jobs:
       - name: Build
         run: |
           [ "$CI_COMMIT_REF_SLUG" == "master" ] && export CI_DOCKER_TAG="latest" || export CI_DOCKER_TAG="${GITHUB_REF##*/}"
-          echo "Using CI_DOCKER_TAG: $CI_DOCKER_TAG"
+          echo "##[set-output name=tag;]$CI_DOCKER_TAG"
 
           docker buildx build \
             --platform linux/386 \
