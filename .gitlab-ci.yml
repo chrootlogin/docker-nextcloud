@@ -3,92 +3,109 @@ variables:
   BUILDX_VER: 0.5.1
 
 stages:
+  - environment
   - build
   - push
   - afterwork
 
-services:
-  - docker:dind
-
 before_script:
   - '[ "$CI_COMMIT_REF_SLUG" == "master" ] && export CI_DOCKER_TAG="latest" || export CI_DOCKER_TAG="$CI_COMMIT_REF_SLUG"'
   - 'echo "Using CI_DOCKER_TAG: $CI_DOCKER_TAG"'
-  - export DOCKER_CLI_EXPERIMENTAL=enabled
-  - mkdir -p /root/.docker/cli-plugins
-  - wget -qO ~/.docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v${BUILDX_VER}/buildx-v${BUILDX_VER}.linux-amd64
-  - chmod +x /root/.docker/cli-plugins/docker-buildx
   - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_TOKEN"
-  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-  - docker buildx create --use
+
+.updateContainerJob:
+  image: docker:latest
+  stage: environment
+  services:
+    - docker:dind
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG -t $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG -f Dockerfile.builder .
+    - docker push $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG
+  
+updateContainer:
+  extends: .updateContainerJob
+  only:
+    changes:
+      - Dockerfile.builder
+  
+ensureContainer:
+  extends: .updateContainerJob
+  allow_failure: true
+  before_script:
+    - "mkdir -p ~/.docker && echo '{\"experimental\": \"enabled\"}' > ~/.docker/config.json"
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # Skip update container `script` if the container already exists
+    # via https://gitlab.com/gitlab-org/gitlab-ce/issues/26866#note_97609397 -> https://stackoverflow.com/a/52077071/796832
+    - docker manifest inspect $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG > /dev/null && exit || true
+
+.buildContainerJob:
+  image: $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - docker buildx create --use
+  retry: 2
 
 build-amd64:
-  image: docker:latest
-  stage: build
+  extends: .buildContainerJob
   script:
     - docker buildx build --push
       --platform linux/amd64
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-amd64" .
-  retry: 2
 
 build-x86:
-  image: docker:latest
-  stage: build
+  extends: .buildContainerJob
   script:
     - docker buildx build --push
       --platform linux/386
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-x86" .
-  retry: 2
 
 build-arm64:
-  image: docker:latest
-  stage: build
+  extends: .buildContainerJob
   script:
     - docker buildx build --push
       --platform linux/arm64/v8
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-arm64" .
-  retry: 2
 
 build-armv7:
-  image: docker:latest
-  stage: build
+  extends: .buildContainerJob
   script:
     - docker buildx build --push
       --platform linux/arm/v7
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-armv7" .
-  retry: 2
 
 build-ppc64le:
-  image: docker:latest
-  stage: build
+  extends: .buildContainerJob
   script:
     - docker buildx build --push
       --platform linux/ppc64le
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-ppc64le" .
-  retry: 2
 
 build-s390x:
-  image: docker:latest
-  stage: build
+  extends: .buildContainerJob
   script:
     - docker buildx build --push
       --platform linux/s390x
       --build-arg "VCS_REF=$CI_COMMIT_SHORT_SHA" 
       --build-arg 'BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`' 
       -t "$CI_IMAGE:$CI_DOCKER_TAG-s390x" .
-  retry: 2
 
 push-docker-hub:
-  image: docker:latest
+  image: $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG
   stage: push
   script:
     - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-amd64"
@@ -108,7 +125,7 @@ push-docker-hub:
     - docker manifest push "$CI_IMAGE:$CI_DOCKER_TAG"
 
 push-quay-io:
-  image: docker:latest
+  image: $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG
   stage: push
   script:
     - docker login -u "$QUAYIO_USERNAME" -p "$QUAYIO_TOKEN" quay.io
@@ -148,13 +165,13 @@ push-quay-io:
     - docker manifest push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG"
 
 webhook-microbadger:
-  image: curlimages/curl
+  image: $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG
   stage: afterwork
   script:
     - curl -X POST https://hooks.microbadger.com/images/rootlogin/nextcloud/$MICROBADGER_WEBHOOK
 
 webhook-pushover:
-  image: curlimages/curl
+  image: $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG
   stage: afterwork
   script:
     - curl -s 
