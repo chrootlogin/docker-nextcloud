@@ -20,9 +20,9 @@ before_script:
     - docker:dind
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker pull $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG -t $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG -f Dockerfile.builder .
-    - docker push $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG
+    - docker pull $CI_REGISTRY_IMAGE/builder:$CI_COMMIT_REF_SLUG || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE/builder:$CI_COMMIT_REF_SLUG -t $CI_REGISTRY_IMAGE/builder:$CI_COMMIT_REF_SLUG -f Dockerfile.builder .
+    - docker push $CI_REGISTRY_IMAGE/builder:$CI_COMMIT_REF_SLUG
   
 updateContainer:
   extends: .updateContainerJob
@@ -38,10 +38,10 @@ ensureContainer:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     # Skip update container `script` if the container already exists
     # via https://gitlab.com/gitlab-org/gitlab-ce/issues/26866#note_97609397 -> https://stackoverflow.com/a/52077071/796832
-    - docker manifest inspect $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG > /dev/null && exit || true
+    - docker manifest inspect $CI_REGISTRY_IMAGE/builder:$CI_COMMIT_REF_SLUG > /dev/null && exit || true
 
 .buildContainerJob:
-  image: $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG
+  image: $CI_REGISTRY_IMAGE/builder:$CI_COMMIT_REF_SLUG
   stage: build
   services:
     - docker:dind
@@ -114,7 +114,7 @@ build-s390x:
       -t "$CI_IMAGE:$CI_DOCKER_TAG-s390x" .
 
 push-docker-hub:
-  image: $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG
+  image: $CI_REGISTRY_IMAGE/builder:$CI_COMMIT_REF_SLUG
   stage: push
   script:
     - docker pull "$CI_IMAGE:$CI_DOCKER_TAG-amd64"
@@ -136,7 +136,7 @@ push-docker-hub:
     - docker manifest push "$CI_IMAGE:$CI_DOCKER_TAG"
 
 push-quay-io:
-  image: $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG
+  image: $CI_REGISTRY_IMAGE/builder:$CI_COMMIT_REF_SLUG
   stage: push
   script:
     - docker login -u "$QUAYIO_USERNAME" -p "$QUAYIO_TOKEN" quay.io
@@ -181,13 +181,13 @@ push-quay-io:
     - docker manifest push "quay.io/$CI_IMAGE:$CI_DOCKER_TAG"
 
 webhook-microbadger:
-  image: $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG
+  image: $CI_REGISTRY_IMAGE/builder:$CI_COMMIT_REF_SLUG
   stage: afterwork
   script:
     - curl -X POST https://hooks.microbadger.com/images/rootlogin/nextcloud/$MICROBADGER_WEBHOOK
 
 webhook-pushover:
-  image: $CI_REGISTRY_IMAGE-builder:$CI_COMMIT_REF_SLUG
+  image: $CI_REGISTRY_IMAGE/builder:$CI_COMMIT_REF_SLUG
   stage: afterwork
   script:
     - curl -s 
