@@ -11,7 +11,7 @@ jobs:
       - name: Retrieve docker tag
         shell: bash
         run: |
-          export BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          export BRANCH_NAME=${GITHUB_REF#refs/*/}
 
           [ "$BRANCH_NAME" == "master" ] && export DOCKER_TAG="latest" || export DOCKER_TAG="${BRANCH_NAME//[^A-Za-z0-9-]/-}"
           echo "::set-output name=tag::$DOCKER_TAG"
