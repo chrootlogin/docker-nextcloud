@@ -19,7 +19,6 @@ Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fo
 * Supports uploads up to 10GB.
 * This image is also available via [Quay.io](http://quay.io/rootlogin/nextcloud).
 * **NEW!** Multi architecture support (x86,amd64,armv6,armv7,arm64,ppc64le,s390x)!
-* **NEW!** Mirrored to [gitlab.com](https://gitlab.com/rootlogin/nextcloud). Uses Gitlab CI for multi-arch builds.
 
 ## Container environment
 
