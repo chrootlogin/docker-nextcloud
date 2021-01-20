@@ -216,6 +216,8 @@ This stuff is released under GPL. I'm happy about every pull-request, that makes
 
 ## Donate
 
-If you want to donate for this project, you can send me some coins to the following address.
+If you want to donate for this project you can do it through [Github Sponsorship](https://github.com/sponsors/chrootlogin/).
+
+Or you can send me some crypto-coins to the following address:
 
 **Bitcoin**: bc1qvemyhud469qe4v6lcsn8sxu5e57m4sw3u2ujff
